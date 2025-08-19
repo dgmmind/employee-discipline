@@ -11,6 +11,19 @@
             box-sizing: border-box;
         }
 
+        :root{
+            --bg:#0B0E14;
+            --surface:#0F1115;
+            --surface-2:#151924;
+            --text:#E7EAF0;
+            --text-2:#A7AEC0;
+            --primary:#2B6CB0; /* puedes cambiar a #6D28D9 */
+            --success:#16A34A;--warning:#F59E0B;--danger:#DC2626;
+            --border:#1C1F26;--shadow:0 6px 20px rgba(0,0,0,.35);
+            --radius:8px;--space:16px;
+            --sidebar-w:280px;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
@@ -27,8 +40,9 @@
         }
 
         .login-screen {
-            padding: 40px;
+            padding: 56px 40px;
             text-align: center;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
         }
 
         .login-form {
@@ -51,16 +65,18 @@
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
+            background: #fff;
+            color: #000;
             border-radius: 4px;
             font-size: 14px;
         }
 
         .btn {
-            background-color: #4CAF50;
-            color: white;
+            background-color: var(--primary);
+            color: var(--text);
             padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             margin: 5px;
@@ -281,6 +297,23 @@
             display: none;
         }
 
+        /* Module navigation (tabs under header) */
+        .module-nav{ display:flex; gap:8px; padding:12px 16px; border-bottom:1px solid #ddd; background:#fff; position:sticky; top:0; z-index:5; }
+        .module-nav .module-nav-item{
+            background:#f5f7fb; border:1px solid #e2e8f0; color:#334155; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px;
+        }
+        .module-nav .module-nav-item.active{ background:#e2e8f0; color:#111827; }
+
+        /* Topbar horizontal (reemplaza sidebar) */
+        .topbar{ position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:12px; padding:10px 16px; background:#ffffff; border-bottom:1px solid #ddd; }
+        .topbar .brand{ display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; }
+        .topbar .nav-actions{ display:flex; align-items:center; gap:8px; margin-left:8px; }
+        .topbar .nav-btn{ background:#f5f7fb; border:1px solid #e2e8f0; color:#334155; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; }
+        .topbar .nav-btn:hover{ background:#e2e8f0; color:#111827; }
+        .topbar .search-area{ margin-left:auto; display:flex; align-items:center; gap:10px; }
+        .topbar #globalSearch{ padding:8px 10px; border:1px solid #e5e7eb; border-radius:8px; min-width:220px; }
+        .topbar .manager-name{ color:#475569; font-weight:700; }
+
         .stats {
             margin-top: 20px;
             padding: 15px;
@@ -322,6 +355,7 @@
                 font-size: 9px;
             }
         }
+        /* Sidebar eliminado: estilos removidos */
     </style>
 </head>
 <body>
@@ -331,24 +365,42 @@
             <h2>Sistema de Evaluación de Empleados</h2>
             <div class="login-form">
                 <div class="form-group">
-                    <label for="managerId">ID de Manager:</label>
-                    <select id="managerId">
-                        <option value="">Seleccionar Manager</option>
-                        <option value="MGR001">David Maldonado (MGR001)</option>
-                        <option value="MGR002">Ana García (MGR002)</option>
-                        <option value="MGR003">Carlos López (MGR003)</option>
-                        <option value="MGR004">María Rodríguez (MGR004)</option>
-                    </select>
+                    <label for="managerUsername">Usuario:</label>
+                    <input type="text" id="managerUsername" placeholder="ej. dmaldonado" />
+                </div>
+                <div class="form-group">
+                    <label for="managerPassword">Contraseña:</label>
+                    <input type="password" id="managerPassword" placeholder="Ingrese su contraseña" />
                 </div>
                 <button class="btn" onclick="login()">Ingresar</button>
             </div>
+
         </div>
 
         <!-- Pantalla Principal -->
         <div id="mainScreen" class="hidden">
-            <!-- Header del Manager -->
-            <div id="managerHeader" class="header"></div>
+            <!-- Topbar horizontal -->
+            <div class="topbar">
+                <div class="brand">
+                    <i data-feather="grid"></i>
+                    <span>Evaluaciones</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="nav-btn" id="btnCreateWeek" onclick="showCreateWeek()">Crear semana</button>
+                    <button class="nav-btn" id="btnWeeklyView" onclick="showWeekView()">Vista semanal</button>
+                    <button class="nav-btn" id="btnDailyView" onclick="showDayView()">Vista por día</button>
+                    <button class="nav-btn" id="btnReports" onclick="showReports()">Reportes</button>
+                    <button class="nav-btn" id="btnMyEvaluations" onclick="showMyEvaluations()" style="display:none;">Mis evaluaciones</button>
+                </div>
+                <div class="search-area">
+                    <input id="globalSearch" type="search" placeholder="Buscar empleado..." oninput="globalSearchChange(this.value)" />
+                    <span id="managerHeader" class="manager-name"></span>
+                    <button class="nav-btn" id="btnLogout" onclick="logoutApp()">Cerrar sesión</button>
+                </div>
+            </div>
             
+            <!-- Vista: Crear Semana -->
+            <div id="createWeekView" class="hidden">
             <!-- Controles de Semana -->
             <div class="week-management">
                 <div class="week-controls">
@@ -365,9 +417,10 @@
                     </div>
                 </div>
             </div>
+            </div>
 
-            <!-- Navegación entre vistas -->
-            <div class="navigation-buttons">
+            <!-- Navegación entre vistas (antigua) -->
+            <div class="navigation-buttons" style="display:none;">
                 <button class="btn-nav" onclick="showWeekView()">Vista Semanal</button>
                 <button class="btn-nav" onclick="showDayView()">Vista por Día</button>
                 <button class="btn-nav" onclick="showReports()">Reportes</button>
@@ -391,8 +444,12 @@
                     <label>Alcance:</label>
                     <select id="reportScope">
                         <option value="current_week">Semana actual</option>
+                        <option value="selected_week">Semana específica</option>
                         <option value="all_weeks">Todas las semanas</option>
                     </select>
+
+                    <label id="reportWeekLabel" style="display:none;">Semana:</label>
+                    <select id="reportWeek" style="display:none;"></select>
 
                     <label>Vista:</label>
                     <select id="reportView">
@@ -401,13 +458,7 @@
                     </select>
 
                     <label>Categoría:</label>
-                    <select id="reportCategory">
-                        <option value="ALL">Todas</option>
-                        <option value="ASISTENCIA">ASISTENCIA</option>
-                        <option value="PLÁTICAS">PLÁTICAS</option>
-                        <option value="PRODUCTIVIDAD">PRODUCTIVIDAD</option>
-                        <option value="ACTITUD">ACTITUD</option>
-                    </select>
+                    <select id="reportCategory"></select>
 
                     <label>Empleado (opcional):</label>
                     <select id="reportEmployee">
@@ -427,165 +478,34 @@
                 
                 <!-- Vista Semanal -->
                 <table class="evaluation-table" id="weeklyTable">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">EMPLEADO</th>
-                            <th colspan="8" class="day-header">LUNES</th>
-                            <th colspan="8" class="day-header">MARTES</th>
-                            <th colspan="8" class="day-header">MIÉRCOLES</th>
-                            <th colspan="8" class="day-header">JUEVES</th>
-                            <th colspan="8" class="day-header">VIERNES</th>
-                        </tr>
-                        <tr>
-                            <!-- Lunes -->
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                            <!-- Martes -->
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                            <!-- Miércoles -->
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                            <!-- Jueves -->
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                            <!-- Viernes -->
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                        </tr>
-                    </thead>
+                    <thead id="weeklyTableHeader"></thead>
                     <tbody id="evaluationTableBody">
                     </tbody>
                 </table>
 
                 <!-- Tablas de Vista por Día -->
                 <table class="evaluation-table single-day-table" id="mondayTable">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">EMPLEADO</th>
-                            <th colspan="8" class="day-header">LUNES</th>
-                        </tr>
-                        <tr>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                        </tr>
-                    </thead>
+                    <thead id="mondayTableHeader"></thead>
                     <tbody id="mondayTableBody"></tbody>
                 </table>
 
                 <table class="evaluation-table single-day-table" id="tuesdayTable">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">EMPLEADO</th>
-                            <th colspan="8" class="day-header">MARTES</th>
-                        </tr>
-                        <tr>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                        </tr>
-                    </thead>
+                    <thead id="tuesdayTableHeader"></thead>
                     <tbody id="tuesdayTableBody"></tbody>
                 </table>
 
                 <table class="evaluation-table single-day-table" id="wednesdayTable">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">EMPLEADO</th>
-                            <th colspan="8" class="day-header">MIÉRCOLES</th>
-                        </tr>
-                        <tr>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                        </tr>
-                    </thead>
+                    <thead id="wednesdayTableHeader"></thead>
                     <tbody id="wednesdayTableBody"></tbody>
                 </table>
 
                 <table class="evaluation-table single-day-table" id="thursdayTable">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">EMPLEADO</th>
-                            <th colspan="8" class="day-header">JUEVES</th>
-                        </tr>
-                        <tr>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                        </tr>
-                    </thead>
+                    <thead id="thursdayTableHeader"></thead>
                     <tbody id="thursdayTableBody"></tbody>
                 </table>
 
                 <table class="evaluation-table single-day-table" id="fridayTable">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">EMPLEADO</th>
-                            <th colspan="8" class="day-header">VIERNES</th>
-                        </tr>
-                        <tr>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ASISTENCIA</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PLÁTICAS</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">PRODUCTIVIDAD</th>
-                            <th class="category-header">✓</th>
-                            <th class="category-header">ACTITUD</th>
-                        </tr>
-                    </thead>
+                    <thead id="fridayTableHeader"></thead>
                     <tbody id="fridayTableBody"></tbody>
                 </table>
 
@@ -595,120 +515,153 @@
                     </div>
                 </div>
             </div>
+            <!-- Mis Evaluaciones (Empleado) - movido al mainScreen -->
+            <div id="myEvaluationsSection" class="hidden" style="padding:20px;">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+                    <div id="myWeekHeader" class="week-header" style="margin:0;">Semana:</div>
+                    <select id="myWeekSelect" onchange="onMyWeekChange()" style="padding:6px 8px; border-radius:6px; border:1px solid #e5e7eb;"></select>
+                </div>
+                <table class="evaluation-table" id="myEvaluationsTable">
+                    <thead id="myEvaluationsHeader"></thead>
+                    <tbody id="myEvaluationsBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
-
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
     <script>
         class EmployeeEvaluationSystem {
             constructor() {
                 this.currentManager = null;
+                this.currentEmployee = null;
+                this.employeeManagerId = null;
                 this.currentWeek = null;
                 this.currentWeekId = null;
                 this.evaluationData = {};
                 this.weekIdByKey = {};
                 this.weekKeyById = {};
-                
-                this.managers = {
-                    'MGR001': {
-                        name: 'DAVID MALDONADO',
-                        employees: [
-                            { id: 'EMP001', name: 'LOURDES RAQUEL AGUIRRE' },
-                            { id: 'EMP002', name: 'ERICKA DANIELA MARTINEZ' },
-                            { id: 'EMP003', name: 'ASTRID MARIELA COLINDRES ZELAYA' },
-                            { id: 'EMP004', name: 'EVELYN DANIELA OSEGUERA AGUILAR' },
-                            { id: 'EMP005', name: 'ANGEL DAVID ALVARENGA MARTINEZ' }
-                        ]
-                    },
-                    'MGR002': {
-                        name: 'ANA GARCÍA',
-                        employees: [
-                            { id: 'EMP006', name: 'JUAN CARLOS MENDEZ' },
-                            { id: 'EMP007', name: 'SOFIA ELENA TORRES' },
-                            { id: 'EMP008', name: 'RICARDO ANTONIO FLORES' },
-                            { id: 'EMP009', name: 'PATRICIA ISABEL MORALES' },
-                            { id: 'EMP010', name: 'FERNANDO JOSE HERRERA' }
-                        ]
-                    },
-                    'MGR003': {
-                        name: 'CARLOS LÓPEZ',
-                        employees: [
-                            { id: 'EMP011', name: 'CLAUDIA PATRICIA RIVERA' },
-                            { id: 'EMP012', name: 'MIGUEL ANGEL SANTOS' },
-                            { id: 'EMP013', name: 'ANDREA LUCIA VARGAS' },
-                            { id: 'EMP014', name: 'JOSE MANUEL CASTRO' },
-                            { id: 'EMP015', name: 'GABRIELA MARIA JIMENEZ' }
-                        ]
-                    },
-                    'MGR004': {
-                        name: 'MARÍA RODRÍGUEZ',
-                        employees: [
-                            { id: 'EMP016', name: 'ROBERTO CARLOS PEÑA' },
-                            { id: 'EMP017', name: 'VALERIA ALEJANDRA CRUZ' },
-                            { id: 'EMP018', name: 'DIEGO FERNANDO RAMOS' },
-                            { id: 'EMP019', name: 'CAROLINA BEATRIZ ORTEGA' },
-                            { id: 'EMP020', name: 'ALEJANDRO DAVID SILVA' }
-                        ]
-                    }
-                };
-
-                this.evaluationItems = {
-                    asistencia: [
-                        'Sin problemas',
-                        'Llegó tarde',
-                        'Pausa excesiva',
-                        'Salió temprano',
-                        'Falta injustificada'
-                    ],
-                    platicas: [
-                        'Sin problemas',
-                        'Plática excesiva',
-                        'Plática entre compañeros',
-                        'Uso de teléfono personal',
-                        'Distracción general'
-                    ],
-                    productividad: [
-                        'Sin problemas',
-                        'Bajo rendimiento',
-                        'Errores frecuentes',
-                        'Lentitud en tareas',
-                        'No cumple objetivos'
-                    ],
-                    actitud: [
-                        'Sin problemas',
-                        'Actitud negativa',
-                        'Falta de cooperación',
-                        'Conflictos con compañeros',
-                        'Resistencia a instrucciones'
-                    ]
-                };
-
+                // Datos externos
+                this.managers = {};
+                this.evaluationItems = {};
+                // Mapas de login
+                this.managerUsernames = {};
+                this.managerPasswords = {};
+                this.employeeUsernames = {}; // username -> { managerId, employeeId }
+                this.employeePasswords = {}; // employeeId -> password
+                // Constantes de UI
                 this.categories = ['ASISTENCIA', 'PLÁTICAS', 'PRODUCTIVIDAD', 'ACTITUD'];
-                
                 this.categoryMapping = {
                     'ASISTENCIA': 'asistencia',
                     'PLÁTICAS': 'platicas',
                     'PRODUCTIVIDAD': 'productividad',
                     'ACTITUD': 'actitud'
                 };
-
                 this.days = ['LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES'];
-
-                this.loadStoredData();
+                // Estado de carga de datos estáticos
+                this.dataLoaded = false;
+                this.dataLoadPromise = null;
+            }
+            async loadStaticData() {
+                // Carga managers y evaluation items desde /json
+                if (this.dataLoadPromise) { await this.dataLoadPromise; return; }
+                this.dataLoadPromise = (async () => {
+                    const [managersRes, itemsRes] = await Promise.all([
+                        fetch('json/managers.json'),
+                        fetch('json/evaluation_items.json')
+                    ]);
+                    this.managers = await managersRes.json();
+                    this.evaluationItems = await itemsRes.json();
+                })();
+                await this.dataLoadPromise;
+                // Construir mapas
+                this.managerUsernames = {};
+                this.managerPasswords = {};
+                Object.keys(this.managers).forEach(mid => {
+                    const m = this.managers[mid];
+                    if (m && m.username) this.managerUsernames[String(m.username).toLowerCase()] = mid;
+                    if (m && m.password) this.managerPasswords[mid] = m.password;
+                });
+                this.employeeUsernames = {};
+                this.employeePasswords = {};
+                Object.keys(this.managers).forEach(mid => {
+                    (this.managers[mid].employees || []).forEach(emp => {
+                        if (emp.username) this.employeeUsernames[String(emp.username).toLowerCase()] = { managerId: mid, employeeId: emp.id };
+                        if (emp.password) this.employeePasswords[emp.id] = emp.password;
+                    });
+                });
+                this.dataLoaded = true;
             }
 
-            login() {
-                const managerId = document.getElementById('managerId').value;
-                if (!managerId) {
-                    alert('Por favor selecciona un manager');
+            async ensureStaticData(){
+                if (!this.dataLoaded) await this.loadStaticData();
+            }
+
+            async login() {
+                await this.ensureStaticData();
+                const username = (document.getElementById('managerUsername').value || '').trim().toLowerCase();
+                const password = document.getElementById('managerPassword').value;
+                if (!username) {
+                    alert('Por favor ingrese el usuario');
                     return;
                 }
-
-                this.currentManager = managerId;
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('mainScreen').classList.remove('hidden');
-                document.getElementById('managerHeader').textContent = `MANAGER ${this.managers[managerId].name}`;
-                
-                this.loadWeekOptions();
+                if (!password) {
+                    alert('Por favor ingrese la contraseña');
+                    return;
+                }
+                // 1) Intento como Manager
+                const managerId = this.managerUsernames[username];
+                if (managerId) {
+                    const expected = this.managerPasswords[managerId];
+                    if (typeof expected !== 'string' || password !== expected) {
+                        alert('Contraseña incorrecta');
+                        return;
+                    }
+                    this.currentManager = managerId;
+                    // Persistir sesión Manager
+                    fetch('api/index.php?action=login', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ manager_id: managerId })
+                    }).catch(()=>{}).finally(() => {
+                        document.getElementById('loginScreen').classList.add('hidden');
+                        const main = document.getElementById('mainScreen');
+                        main.classList.remove('hidden');
+                        if (window.feather && typeof window.feather.replace === 'function') { window.feather.replace(); }
+                        document.getElementById('managerHeader').textContent = `MANAGER ${this.managers[managerId].name}`;
+                        // Mostrar botones de manager
+                        toggleManagerButtons(true);
+                        this.loadWeekOptions();
+                        this.autoLoadCurrentWeek();
+                    });
+                    return;
+                }
+                // 2) Intento como Empleado
+                const empInfo = this.employeeUsernames[username];
+                if (!empInfo) {
+                    alert('Usuario no encontrado');
+                    return;
+                }
+                const empPass = this.employeePasswords[empInfo.employeeId];
+                if (typeof empPass !== 'string' || password !== empPass) {
+                    alert('Contraseña incorrecta');
+                    return;
+                }
+                // Persistir sesión Empleado
+                this.currentEmployee = empInfo.employeeId;
+                this.employeeManagerId = empInfo.managerId;
+                fetch('api/index.php?action=employee_login', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employee_id: this.currentEmployee, manager_id: this.employeeManagerId })
+                }).catch(()=>{}).finally(async () => {
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    const main = document.getElementById('mainScreen');
+                    main.classList.remove('hidden');
+                    document.getElementById('managerHeader').textContent = `EMPLEADO ${this.getEmployeeName(this.currentEmployee)}`;
+                    await this.loadMyEvaluationsCurrentWeek();
+                    await this.loadEmployeeWeeks();
+                });
             }
 
             async loadWeekOptions() {
@@ -746,14 +699,24 @@
             }
 
             async createNewWeek() {
-                const startDateInput = document.getElementById('startDate').value;
-                const endDateInput = document.getElementById('endDate').value;
+                const startDateRaw = document.getElementById('startDate').value;
+                const endDateRaw = document.getElementById('endDate').value;
 
-                if (!startDateInput || !endDateInput) {
+                if (!startDateRaw || !endDateRaw) {
                     alert('Por favor ingrese ambas fechas');
                     return;
                 }
-                console.log(startDateInput, endDateInput);
+                // Normalize YYYY-MM-DD (from input[type=date]) to DD/MM/YYYY expected by validator/UI
+                const toDMY = (ymd) => {
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(ymd)) {
+                        const [y, m, d] = ymd.split('-');
+                        return `${d}/${m}/${y}`;
+                    }
+                    return ymd; // already in D/M/Y or other
+                };
+                const startDateInput = toDMY(startDateRaw);
+                const endDateInput = toDMY(endDateRaw);
+                console.log('createNewWeek normalized:', startDateRaw, endDateRaw, '->', startDateInput, endDateInput);
 
                 if (!this.validateWeekDates(startDateInput, endDateInput)) {
                     return;
@@ -873,12 +836,11 @@
                         
                         // Initialize 5 days (Monday to Friday)
                         for (let i = 0; i < 5; i++) {
-                            this.evaluationData[this.currentManager][weekKey][employee.id][i] = {
-                                ASISTENCIA: { checked: true, item: 'Sin problemas' },
-                                PLÁTICAS: { checked: true, item: 'Sin problemas' },
-                                PRODUCTIVIDAD: { checked: true, item: 'Sin problemas' },
-                                ACTITUD: { checked: true, item: 'Sin problemas' }
-                            };
+                            const dayObj = {};
+                            this.categories.forEach(cat => {
+                                dayObj[cat] = { checked: true, item: 'Sin problemas' };
+                            });
+                            this.evaluationData[this.currentManager][weekKey][employee.id][i] = dayObj;
                         }
                     });
                 }
@@ -895,6 +857,9 @@
                 }
 
                 const weekData = this.evaluationData[this.currentManager][this.currentWeek];
+
+                // Render header dynamically
+                this.renderWeeklyHeader();
 
                 this.managers[this.currentManager].employees.forEach(employee => {
                     const row = document.createElement('tr');
@@ -934,6 +899,54 @@
                 });
 
                 this.updateStats();
+            }
+
+            renderWeeklyHeader() {
+                const thead = document.getElementById('weeklyTableHeader');
+                if (!thead) return;
+                let firstRow = '<tr><th rowspan="2">EMPLEADO</th>';
+                this.days.forEach(day => {
+                    firstRow += `<th colspan="${this.categories.length * 2}" class="day-header">${day}</th>`;
+                });
+                firstRow += '</tr>';
+
+                let secondRow = '<tr>';
+                this.days.forEach(() => {
+                    this.categories.forEach(cat => {
+                        secondRow += '<th class="category-header">✓</th>';
+                        secondRow += `<th class="category-header">${cat}</th>`;
+                    });
+                });
+                secondRow += '</tr>';
+
+                thead.innerHTML = firstRow + secondRow;
+            }
+
+            renderSingleDayHeader(day) {
+                const headerId = {
+                    'LUNES': 'mondayTableHeader',
+                    'MARTES': 'tuesdayTableHeader',
+                    'MIÉRCOLES': 'wednesdayTableHeader',
+                    'JUEVES': 'thursdayTableHeader',
+                    'VIERNES': 'fridayTableHeader'
+                }[day];
+                const thead = document.getElementById(headerId);
+                if (!thead) return;
+                let html = '<tr>' +
+                    '<th rowspan="2">EMPLEADO</th>' +
+                    `<th colspan="${this.categories.length * 2}" class="day-header">${day}</th>` +
+                    '</tr><tr>';
+                this.categories.forEach(cat => {
+                    html += '<th class="category-header">✓</th>';
+                    html += `<th class="category-header">${cat}</th>`;
+                });
+                html += '</tr>';
+                thead.innerHTML = html;
+            }
+
+            renderAllHeaders() {
+                this.renderWeeklyHeader();
+                this.days.forEach(d => this.renderSingleDayHeader(d));
             }
 
             async updateEvaluation(employeeId, dayIndex, category, field, value) {
@@ -1069,18 +1082,14 @@
                     
                     let totalEmployees = employees.length;
                     let perfectEmployees = 0;
-                    let categoryStats = {
-                        ASISTENCIA: 0,
-                        PLÁTICAS: 0,
-                        PRODUCTIVIDAD: 0,
-                        ACTITUD: 0
-                    };
+                    const categoryStats = {};
+                    this.categories.forEach(c => categoryStats[c] = 0);
 
                     employees.forEach(employee => {
                         const employeeData = weekData[employee.id][dayIndex];
                         if (employeeData) {
                             let isPerfect = true;
-                            Object.keys(categoryStats).forEach(category => {
+                            this.categories.forEach(category => {
                                 if (employeeData[category] && employeeData[category].checked) {
                                     categoryStats[category]++;
                                 } else {
@@ -1123,12 +1132,11 @@
                         this.managers[this.currentManager].employees.forEach(employee => {
                             this.evaluationData[this.currentManager][weekKey][employee.id] = [];
                             for (let i = 0; i < 5; i++) {
-                                this.evaluationData[this.currentManager][weekKey][employee.id][i] = {
-                                    ASISTENCIA: { checked: true, item: 'Sin problemas' },
-                                    PLÁTICAS: { checked: true, item: 'Sin problemas' },
-                                    PRODUCTIVIDAD: { checked: true, item: 'Sin problemas' },
-                                    ACTITUD: { checked: true, item: 'Sin problemas' }
-                                };
+                                const dayObj = {};
+                                this.categories.forEach(cat => {
+                                    dayObj[cat] = { checked: true, item: 'Sin problemas' };
+                                });
+                                this.evaluationData[this.currentManager][weekKey][employee.id][i] = dayObj;
                             }
                         });
 
@@ -1148,6 +1156,7 @@
                 this.renderWeeklyEvaluationTable();
                 document.getElementById('evaluationSection').classList.remove('hidden');
                 document.getElementById('weekHeader').textContent = weekKey;
+                this.renderAllHeaders();
             }
 
             saveData() {
@@ -1177,8 +1186,33 @@
             evaluationSystem.loadWeek();
         }
 
+        // Empleado: cambio de semana en selector
+        function onMyWeekChange(){
+            const sel = document.getElementById('myWeekSelect');
+            if (!sel || !evaluationSystem) return;
+            const key = sel.value;
+            if (key) evaluationSystem.loadMyEvaluationsByWeekKey(key);
+        }
+
+        function setActiveModule(view){
+            const btns = document.querySelectorAll('#moduleNav .module-nav-item');
+            btns.forEach(b=>b.classList.toggle('active', b.getAttribute('data-view')===view));
+        }
+
+        function showCreateWeek(){
+            currentView = 'create';
+            document.getElementById('createWeekView').classList.remove('hidden');
+            document.getElementById('weeklyTable').style.display = 'none';
+            document.getElementById('dayNavigation').style.display = 'none';
+            document.getElementById('reportsModule').style.display = 'none';
+            const dayTables = document.querySelectorAll('.single-day-table');
+            dayTables.forEach(table => table.style.display = 'none');
+            setActiveModule('create');
+        }
+
         function showWeekView() {
             currentView = 'week';
+            document.getElementById('createWeekView').classList.add('hidden');
             document.getElementById('weeklyTable').style.display = 'table';
             document.getElementById('dayNavigation').style.display = 'none';
             document.getElementById('reportsModule').style.display = 'none';
@@ -1186,6 +1220,7 @@
             // Hide all day tables
             const dayTables = document.querySelectorAll('.single-day-table');
             dayTables.forEach(table => table.style.display = 'none');
+            setActiveModule('week');
         }
 
         function showDayView() {
@@ -1195,14 +1230,17 @@
             }
             
             currentView = 'day';
+            document.getElementById('createWeekView').classList.add('hidden');
             document.getElementById('weeklyTable').style.display = 'none';
             document.getElementById('dayNavigation').style.display = 'block';
             document.getElementById('reportsModule').style.display = 'none';
             selectDay(currentDay);
+            setActiveModule('day');
         }
 
-        function showReports() {
+        async function showReports() {
             currentView = 'reports';
+            document.getElementById('createWeekView').classList.add('hidden');
             document.getElementById('weeklyTable').style.display = 'none';
             document.getElementById('dayNavigation').style.display = 'none';
             document.getElementById('reportsModule').style.display = 'block';
@@ -1210,6 +1248,7 @@
             // Hide all day tables
             const dayTables = document.querySelectorAll('.single-day-table');
             dayTables.forEach(table => table.style.display = 'none');
+            setActiveModule('reports');
 
             // Llenar empleados en selector de reportes
             const sel = document.getElementById('reportEmployee');
@@ -1222,6 +1261,81 @@
                     sel.appendChild(opt);
                 });
             }
+
+            // Llenar categorías dinámicamente en selector de reportes
+            const catSel = document.getElementById('reportCategory');
+            if (catSel && evaluationSystem) {
+                catSel.innerHTML = '';
+                const optAll = document.createElement('option');
+                optAll.value = 'ALL';
+                optAll.textContent = 'Todas';
+                catSel.appendChild(optAll);
+                evaluationSystem.categories.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    catSel.appendChild(opt);
+                });
+            }
+
+            // --- Selector de Semana específica ---
+            const weekLabel = document.getElementById('reportWeekLabel');
+            const weekSelect = document.getElementById('reportWeek');
+            const scopeSel = document.getElementById('reportScope');
+
+            const pad = n => String(n).padStart(2, '0');
+            const parseLocalDate = (yyyy_mm_dd) => {
+                const [y, m, d] = String(yyyy_mm_dd).split('-').map(Number);
+                return new Date(y, (m || 1) - 1, (d || 1));
+            };
+
+            const populateWeeks = async () => {
+                weekSelect.innerHTML = '';
+                let keys = [];
+                if (evaluationSystem.weekIdByKey && Object.keys(evaluationSystem.weekIdByKey).length) {
+                    keys = Object.keys(evaluationSystem.weekIdByKey);
+                } else {
+                    // Fallback: pedir al backend
+                    try {
+                        const weeksRes = await fetch(`api/index.php?action=weeks_list&manager_id=${encodeURIComponent(evaluationSystem.currentManager)}`);
+                        const weeksJson = await weeksRes.json();
+                        const tmpMap = {};
+                        (weeksJson.weeks || []).forEach(w => {
+                            const s = parseLocalDate(w.start_date), e = parseLocalDate(w.end_date);
+                            const key = `${pad(s.getDate())}/${pad(s.getMonth()+1)}/${s.getFullYear()} - ${pad(e.getDate())}/${pad(e.getMonth()+1)}/${e.getFullYear()}`;
+                            tmpMap[key] = w.id;
+                        });
+                        // Guardar en memoria si estructura existe
+                        evaluationSystem.weekIdByKey = { ...(evaluationSystem.weekIdByKey || {}), ...tmpMap };
+                        keys = Object.keys(tmpMap);
+                    } catch (e) {
+                        console.warn('No se pudieron cargar semanas para el selector', e);
+                    }
+                }
+                keys.sort();
+                keys.forEach(k => {
+                    const opt = document.createElement('option');
+                    opt.value = k;
+                    opt.textContent = k;
+                    weekSelect.appendChild(opt);
+                });
+                if (evaluationSystem.currentWeek && keys.includes(evaluationSystem.currentWeek)) {
+                    weekSelect.value = evaluationSystem.currentWeek;
+                }
+            };
+
+            const toggleWeekSelector = async () => {
+                const show = scopeSel.value === 'selected_week';
+                weekLabel.style.display = show ? 'inline-block' : 'none';
+                weekSelect.style.display = show ? 'inline-block' : 'none';
+                if (show) await populateWeeks();
+            };
+
+            if (scopeSel && !scopeSel._boundChange) {
+                scopeSel.addEventListener('change', toggleWeekSelector);
+                scopeSel._boundChange = true;
+            }
+            await toggleWeekSelector();
         }
 
         function selectDay(day) {
@@ -1254,6 +1368,7 @@
             document.getElementById(dayMap[day]).style.display = 'table';
             
             // Render the day table
+            evaluationSystem.renderSingleDayHeader(day);
             evaluationSystem.renderDayTable(day);
         }
 
@@ -1330,6 +1445,7 @@
             const view = document.getElementById('reportView')?.value || 'by_employee';
             const category = document.getElementById('reportCategory')?.value || 'ALL';
             const employeeId = document.getElementById('reportEmployee')?.value || 'ALL';
+            const selectedWeekKey = document.getElementById('reportWeek')?.value || '';
 
             const resultsDiv = document.getElementById('reportsResults');
             if (!resultsDiv) return;
@@ -1345,6 +1461,47 @@
                     }
                     const wk = evaluationSystem.currentWeek;
                     dataset[wk] = evaluationSystem.evaluationData[evaluationSystem.currentManager][wk];
+                } else if (scope === 'selected_week') {
+                    const wk = selectedWeekKey || evaluationSystem.currentWeek;
+                    if (!wk) {
+                        resultsDiv.innerHTML = 'Selecciona una semana específica';
+                        return;
+                    }
+                    // Si es la semana actual y tenemos datos en memoria, úsala
+                    if (wk === evaluationSystem.currentWeek && evaluationSystem.evaluationData[evaluationSystem.currentManager][wk]) {
+                        dataset[wk] = evaluationSystem.evaluationData[evaluationSystem.currentManager][wk];
+                    } else {
+                        // Obtener ID de la semana y traer evaluaciones del backend
+                        if (!evaluationSystem.weekIdByKey[wk]) {
+                            await evaluationSystem.loadWeekOptions();
+                        }
+                        const weekId = evaluationSystem.weekIdByKey[wk];
+                        if (!weekId) {
+                            resultsDiv.innerHTML = 'No se encontró la semana seleccionada';
+                            return;
+                        }
+                        // Inicializar estructura base para esa semana
+                        dataset[wk] = {};
+                        evaluationSystem.managers[evaluationSystem.currentManager].employees.forEach(emp => {
+                            dataset[wk][emp.id] = [];
+                            for (let i = 0; i < 5; i++) {
+                                const dayObj = {};
+                                evaluationSystem.categories.forEach(cat => { dayObj[cat] = { checked: true, item: 'Sin problemas' }; });
+                                dataset[wk][emp.id][i] = dayObj;
+                            }
+                        });
+                        // Rellenar con datos reales
+                        const res = await fetch(`api/index.php?action=evaluations_by_week&week_id=${encodeURIComponent(weekId)}`);
+                        const json = await res.json();
+                        if (res.ok) {
+                            (json.evaluations || []).forEach(row => {
+                                const emp = row.employee_id, d = row.day_index, cat = row.category;
+                                if (dataset[wk][emp] && dataset[wk][emp][d]) {
+                                    dataset[wk][emp][d][cat] = { checked: !!row.checked, item: row.item };
+                                }
+                            });
+                        }
+                    }
                 } else {
                     // Traer todas las semanas y evaluaciones
                     const weeksRes = await fetch(`api/index.php?action=weeks_list&manager_id=${encodeURIComponent(evaluationSystem.currentManager)}`);
@@ -1363,12 +1520,11 @@
                         evaluationSystem.managers[evaluationSystem.currentManager].employees.forEach(emp => {
                             dataset[idToKey[w.id]][emp.id] = [];
                             for (let i = 0; i < 5; i++) {
-                                dataset[idToKey[w.id]][emp.id][i] = {
-                                    ASISTENCIA: { checked: true, item: 'Sin problemas' },
-                                    PLÁTICAS: { checked: true, item: 'Sin problemas' },
-                                    PRODUCTIVIDAD: { checked: true, item: 'Sin problemas' },
-                                    ACTITUD: { checked: true, item: 'Sin problemas' }
-                                };
+                                const dayObj = {};
+                                evaluationSystem.categories.forEach(cat => {
+                                    dayObj[cat] = { checked: true, item: 'Sin problemas' };
+                                });
+                                dataset[idToKey[w.id]][emp.id][i] = dayObj;
                             }
                         });
                     });
@@ -1464,10 +1620,280 @@
             return tableHTML;
         }
 
+        // ==== Empleado: Mis Evaluaciones ====
+        function toggleManagerButtons(isManager){
+            const ids = ['btnCreateWeek','btnWeeklyView','btnDailyView','btnReports'];
+            ids.forEach(id=>{ const el=document.getElementById(id); if (el) el.style.display = isManager ? '' : 'none'; });
+            const myBtn = document.getElementById('btnMyEvaluations');
+            if (myBtn) myBtn.style.display = isManager ? 'none' : '';
+            // Hide/Show search only for manager context
+            const search = document.getElementById('globalSearch'); if (search) search.style.display = isManager ? '' : 'none';
+        }
+
+        function showMyEvaluations(){
+            // Hide manager sections
+            document.getElementById('createWeekView')?.classList.add('hidden');
+            document.getElementById('evaluationSection')?.classList.add('hidden');
+            document.getElementById('reportsModule')?.classList.add('hidden');
+            document.getElementById('dayNavigation')?.style.setProperty('display','none');
+            // Show employee section
+            document.getElementById('myEvaluationsSection')?.classList.remove('hidden');
+        }
+
+        EmployeeEvaluationSystem.prototype.getEmployeeName = function(empId){
+            for (const mid of Object.keys(this.managers)){
+                const emp = (this.managers[mid].employees||[]).find(e=>e.id===empId);
+                if (emp) return emp.name;
+            }
+            return empId;
+        }
+
+        EmployeeEvaluationSystem.prototype.loadMyEvaluationsCurrentWeek = async function(){
+            try{
+                // Obtener semana actual o última del manager del empleado
+                const res = await fetch(`api/index.php?action=weeks_current&manager_id=${encodeURIComponent(this.employeeManagerId)}`);
+                const json = await res.json();
+                const w = json.week;
+                if (!w){
+                    document.getElementById('myWeekHeader').textContent = 'No hay semanas disponibles';
+                    showMyEvaluations();
+                    return;
+                }
+                // Construir weekKey
+                const pad = n => String(n).padStart(2,'0');
+                const parseLocalDate = (yyyy_mm_dd) => { const [y,m,d] = String(yyyy_mm_dd).split('-').map(Number); return new Date(y, (m||1)-1, d||1); };
+                const s = parseLocalDate(w.start_date), e = parseLocalDate(w.end_date);
+                const weekKey = `${pad(s.getDate())}/${pad(s.getMonth()+1)}/${s.getFullYear()} - ${pad(e.getDate())}/${pad(e.getMonth()+1)}/${e.getFullYear()}`;
+                this.currentWeek = weekKey;
+                this.currentWeekId = w.id;
+                document.getElementById('myWeekHeader').textContent = `Semana: ${weekKey}`;
+
+                // Traer evaluaciones solo del empleado
+                const evRes = await fetch(`api/index.php?action=evaluations_by_week_employee&week_id=${encodeURIComponent(w.id)}&employee_id=${encodeURIComponent(this.currentEmployee)}`);
+                const evJson = await evRes.json();
+                const rows = (evJson.evaluations||[]);
+                this.renderMyEvaluationsTable(rows);
+                showMyEvaluations();
+            }catch(e){
+                console.error('loadMyEvaluationsCurrentWeek error', e);
+            }
+        }
+
+        // Cargar lista de semanas del manager del empleado y llenar el selector
+        EmployeeEvaluationSystem.prototype.loadEmployeeWeeks = async function(){
+            try{
+                const sel = document.getElementById('myWeekSelect');
+                if (!sel) return;
+                sel.innerHTML = '';
+                const res = await fetch(`api/index.php?action=weeks_list&manager_id=${encodeURIComponent(this.employeeManagerId)}`);
+                if (!res.ok) return;
+                const js = await res.json();
+                const weeks = js.weeks || [];
+                const pad = n => String(n).padStart(2,'0');
+                const parseLocalDate = (yyyy_mm_dd) => { const [y,m,d] = String(yyyy_mm_dd).split('-').map(Number); return new Date(y, (m||1)-1, d||1); };
+                // Limpiar mapas previos
+                this.weekIdByKey = {};
+                this.weekKeyById = {};
+                weeks.forEach(w => {
+                    const s = parseLocalDate(w.start_date), e = parseLocalDate(w.end_date);
+                    const key = `${pad(s.getDate())}/${pad(s.getMonth()+1)}/${s.getFullYear()} - ${pad(e.getDate())}/${pad(e.getMonth()+1)}/${e.getFullYear()}`;
+                    this.weekIdByKey[key] = w.id;
+                    this.weekKeyById[w.id] = key;
+                });
+                // Ordenar por fecha de inicio descendente ya viene del backend, pero aseguramos usando la lista
+                weeks.forEach(w => {
+                    const key = this.weekKeyById[w.id];
+                    const opt = document.createElement('option');
+                    opt.value = key;
+                    opt.textContent = key;
+                    sel.appendChild(opt);
+                });
+                // Seleccionar la semana actual si está definida
+                if (this.currentWeek && this.weekIdByKey[this.currentWeek]){
+                    sel.value = this.currentWeek;
+                } else if (sel.options.length > 0) {
+                    sel.selectedIndex = 0;
+                }
+            }catch(e){
+                console.error('loadEmployeeWeeks error', e);
+            }
+        }
+
+        // Cargar evaluaciones del empleado por weekKey seleccionada
+        EmployeeEvaluationSystem.prototype.loadMyEvaluationsByWeekKey = async function(weekKey){
+            try{
+                const weekId = this.weekIdByKey[weekKey];
+                if (!weekId) return;
+                this.currentWeek = weekKey;
+                this.currentWeekId = weekId;
+                document.getElementById('myWeekHeader').textContent = `Semana: ${weekKey}`;
+                const evRes = await fetch(`api/index.php?action=evaluations_by_week_employee&week_id=${encodeURIComponent(weekId)}&employee_id=${encodeURIComponent(this.currentEmployee)}`);
+                const evJson = await evRes.json();
+                const rows = (evJson.evaluations||[]);
+                this.renderMyEvaluationsTable(rows);
+            }catch(e){
+                console.error('loadMyEvaluationsByWeekKey error', e);
+            }
+        }
+
+        EmployeeEvaluationSystem.prototype.renderMyEvaluationsTable = function(rows){
+            const head = document.getElementById('myEvaluationsHeader');
+            const body = document.getElementById('myEvaluationsBody');
+            if (!head || !body) return;
+            const days = ['LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES'];
+            const cats = this.categories;
+            head.innerHTML = '';
+            body.innerHTML = '';
+            // Header
+            const trH = document.createElement('tr');
+            trH.innerHTML = `<th class="category-header">Categoría</th>${days.map(d=>`<th class="day-header">${d}</th>`).join('')}`;
+            head.appendChild(trH);
+            // Build data map: [day_index][category] -> {item,checked}
+            const map = {};
+            rows.forEach(r=>{
+                if (!map[r.day_index]) map[r.day_index] = {};
+                map[r.day_index][r.category] = { item: r.item, checked: !!r.checked };
+            });
+            // Rows per category
+            cats.forEach(cat => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="employee-name">${cat}</td>` + days.map((_,idx)=>{
+                    const d = map[idx]?.[cat];
+                    const item = d ? d.item : 'Sin datos';
+                    const ok = d ? d.checked : true;
+                    const badge = ok ? '<span style="color:#2e7d32;">✔</span>' : '<span style="color:#dc2626;">✖</span>';
+                    return `<td>${badge} <small>${item}</small></td>`;
+                }).join('');
+                body.appendChild(tr);
+            });
+        }
+
+        // Helpers para inicializar desde sesión activa
+        async function checkSessionAndInit(){
+            try{
+                evaluationSystem = new EmployeeEvaluationSystem();
+                // Cargar datos estáticos desde /json antes de cualquier acción
+                await evaluationSystem.loadStaticData();
+                // 1) Intentar restaurar sesión de manager
+                const r = await fetch('api/index.php?action=session_status');
+                const js = await r.json();
+                if (js.logged_in && js.manager_id){
+                    evaluationSystem.currentManager = js.manager_id;
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    const main = document.getElementById('mainScreen');
+                    main.classList.remove('hidden');
+                    if (window.feather && typeof window.feather.replace === 'function') { window.feather.replace(); }
+                    const name = evaluationSystem.managers[js.manager_id]?.name || js.manager_id;
+                    document.getElementById('managerHeader').textContent = `MANAGER ${name}`;
+                    toggleManagerButtons(true);
+                    await evaluationSystem.loadWeekOptions();
+                    await evaluationSystem.autoLoadCurrentWeek();
+                    return;
+                }
+                // 2) Intentar restaurar sesión de empleado
+                const r2 = await fetch('api/index.php?action=employee_session_status');
+                const js2 = await r2.json();
+                if (js2.logged_in && js2.employee_id){
+                    evaluationSystem.currentEmployee = js2.employee_id;
+                    evaluationSystem.employeeManagerId = js2.manager_id;
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    const main = document.getElementById('mainScreen');
+                    main.classList.remove('hidden');
+                    if (window.feather && typeof window.feather.replace === 'function') { window.feather.replace(); }
+                    toggleManagerButtons(false);
+                    document.getElementById('btnMyEvaluations').style.display = '';
+                    const empName = evaluationSystem.getEmployeeName(js2.employee_id);
+                    document.getElementById('managerHeader').textContent = `EMPLEADO ${empName}`;
+                    await evaluationSystem.loadMyEvaluationsCurrentWeek();
+                    await evaluationSystem.loadEmployeeWeeks();
+                    return;
+                }
+                // mostrar login si no hay ninguna sesión
+                document.getElementById('loginScreen').classList.remove('hidden');
+            }catch(e){
+                console.error(e);
+                evaluationSystem = new EmployeeEvaluationSystem();
+            }
+        }
+
+        // Cerrar sesión (manager o empleado)
+        async function logoutApp(){
+            try{
+                if (evaluationSystem && evaluationSystem.currentManager){
+                    await fetch('api/index.php?action=logout', { method:'POST' });
+                } else if (evaluationSystem && evaluationSystem.currentEmployee){
+                    await fetch('api/index.php?action=employee_logout', { method:'POST' });
+                }
+            } catch(e) {
+                console.error('logout error', e);
+            }
+            // Reset UI/state
+            try { evaluationSystem = new EmployeeEvaluationSystem(); } catch (_) {}
+            const main = document.getElementById('mainScreen');
+            const login = document.getElementById('loginScreen');
+            if (main) main.classList.add('hidden');
+            if (login) login.classList.remove('hidden');
+        }
+
+        // Auto-carga de semana actual o última
+        EmployeeEvaluationSystem.prototype.autoLoadCurrentWeek = async function(){
+            try{
+                const res = await fetch(`api/index.php?action=weeks_current&manager_id=${encodeURIComponent(this.currentManager)}`);
+                const json = await res.json();
+                const w = json.week;
+                if (!w){
+                    // No hay semanas: mostrar vista para crear
+                    showCreateWeek?.();
+                    return;
+                }
+                // Mapear weekId <-> weekKey
+                const pad = n => String(n).padStart(2,'0');
+                const parseLocalDate = (yyyy_mm_dd) => { const [y,m,d] = String(yyyy_mm_dd).split('-').map(Number); return new Date(y, (m||1)-1, d||1); };
+                const s = parseLocalDate(w.start_date), e = parseLocalDate(w.end_date);
+                const weekKey = `${pad(s.getDate())}/${pad(s.getMonth()+1)}/${s.getFullYear()} - ${pad(e.getDate())}/${pad(e.getMonth()+1)}/${e.getFullYear()}`;
+                this.currentWeek = weekKey;
+                this.currentWeekId = w.id;
+                this.weekIdByKey[weekKey] = w.id;
+                this.weekKeyById[w.id] = weekKey;
+                // Inicializar estructura en memoria si no existe
+                if (!this.evaluationData[this.currentManager] || !this.evaluationData[this.currentManager][weekKey]){
+                    this.initializeWeekData(weekKey);
+                }
+                // Hidratar datos desde backend
+                const evRes = await fetch(`api/index.php?action=evaluations_by_week&week_id=${encodeURIComponent(w.id)}`);
+                const evJson = await evRes.json();
+                if (evRes.ok){
+                    const mgrEmps = this.managers[this.currentManager].employees;
+                    // Reset default
+                    mgrEmps.forEach(emp=>{
+                        for (let i=0;i<5;i++){
+                            const dayObj = {};
+                            this.categories.forEach(cat => { dayObj[cat] = { checked: true, item: 'Sin problemas' }; });
+                            this.evaluationData[this.currentManager][weekKey][emp.id][i] = dayObj;
+                        }
+                    });
+                    (evJson.evaluations||[]).forEach(row => {
+                        const d = row.day_index, emp=row.employee_id, cat=row.category;
+                        if (this.evaluationData[this.currentManager][weekKey][emp] && this.evaluationData[this.currentManager][weekKey][emp][d]){
+                            this.evaluationData[this.currentManager][weekKey][emp][d][cat] = { checked: !!row.checked, item: row.item };
+                        }
+                    });
+                }
+                // Mostrar vista semanal por defecto
+                document.getElementById('evaluationSection').classList.remove('hidden');
+                document.getElementById('weekHeader').textContent = weekKey;
+                this.renderWeeklyEvaluationTable?.();
+                showWeekView?.();
+                // Seleccionar en el select
+                const wkSel = document.getElementById('weekSelect'); if (wkSel) wkSel.value = weekKey;
+            }catch(e){
+                console.error('autoLoadCurrentWeek error', e);
+            }
+        }
+
         // Initialize system when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            evaluationSystem = new EmployeeEvaluationSystem();
-            alert("Sistema inicializado");
+            checkSessionAndInit();
         });
     </script>
 </body>

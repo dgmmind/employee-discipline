@@ -1,0 +1,30 @@
+{
+  "asistencia": [
+    "Sin problemas",
+    "Llegó tarde",
+    "Pausa excesiva",
+    "Salió temprano",
+    "Falta injustificada"
+  ],
+  "platicas": [
+    "Sin problemas",
+    "Plática excesiva",
+    "Plática entre compañeros",
+    "Uso de teléfono personal",
+    "Distracción general"
+  ],
+  "productividad": [
+    "Sin problemas",
+    "Bajo rendimiento",
+    "Errores frecuentes",
+    "No cumple objetivos",
+    "Requiere apoyo constante"
+  ],
+  "actitud": [
+    "Sin problemas",
+    "Actitud negativa",
+    "Falta de cooperación",
+    "Falta de respeto",
+    "Incumplimiento de normas"
+  ]
+}
