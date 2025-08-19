@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Evaluación de Empleados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Añadiendo estilos para el sistema de pestañas */
+        .tabs-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-button:hover {
+            background: #e9ecef;
+            color: #495057;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #4285f4;
+            border-bottom-color: #4285f4;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            padding: 30px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Estilos para la vista de resumen con tarjetas coloridas */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            padding: 25px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-card.blue {
+            background: linear-gradient(135deg, #4285f4 0%, #1976d2 100%);
+        }
+
+        .summary-card.green {
+            background: linear-gradient(135deg, #34a853 0%, #2e7d32 100%);
+        }
+
+        .summary-card.red {
+            background: linear-gradient(135deg, #ea4335 0%, #d32f2f 100%);
+        }
+
+        .summary-card.purple {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+
+        .summary-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .summary-card-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .summary-card-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* Estilos para la vista por empleado */
+        .employee-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .employee-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #34a853;
+        }
+
+        .employee-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .employee-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .employee-id {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+
+        .employee-score {
+            background: #34a853;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .employee-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .category-score {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .category-name {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .category-percentage {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #34a853;
+        }
+
+        /* Estilos para la vista por categoría */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .category-progress {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #34a853 0%, #2e7d32 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .category-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* Estilos para la vista de tendencias */
+        .trends-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .trends-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .trends-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .trends-chart {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .chart-placeholder {
+            color: #6c757d;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .trends-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .trend-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #4285f4;
+        }
+
+        .trend-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .trend-value.trend-up {
+            color: #34a853;
+        }
+
+        .trend-value.trend-down {
+            color: #ea4335;
+        }
+
+        .trend-value.trend-stable {
+            color: #fbbc04;
+        }
+
+        .trend-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* Estilos para controles y sección de evaluación */
+        .controls {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .evaluation-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .evaluation-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .evaluation-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            color: #333;
+            text-align: left !important;
+            padding-left: 15px !important;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #4285f4 0%, #1976d2 100%) !important;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #34a853 0%, #2e7d32 100%) !important;
+            font-size: 0.8rem;
+        }
+
+        .evaluation-checkbox {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .item-select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .item-select.has-issue {
+            border-color: #ea4335;
+            background-color: #ffeaea;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4285f4;
+        }
+
+        .reports-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .weekly-table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ea4335;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(234, 67, 53, 0.3);
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                min-width: 120px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .employee-categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen">
+        <div class="login-container">
+            <h2>Sistema de Evaluación de Empleados</h2>
+            <div class="form-group">
+                <label for="managerId">Seleccione Manager:</label>
+                <!-- Cambiando ID de managerSelect a managerId para coincidir con el JavaScript -->
+                <select id="managerId">
+                    <option value="">-- Seleccione un manager --</option>
+                </select>
+            </div>
+            <!-- Agregando formulario para el campo de contraseña -->
+            <form onsubmit="event.preventDefault(); evaluationSystem.login();">
+                <div class="form-group">
+                    <label for="managerPassword">Contraseña:</label>
+                    <input type="password" id="managerPassword" placeholder="Ingrese su contraseña">
+                </div>
+                <button type="submit" style="width: 100%;">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pantalla Principal -->
+    <div id="mainScreen" class="hidden">
+        <div class="container">
+            <div class="header">
+                <h1 id="managerHeader">SISTEMA DE EVALUACIÓN</h1>
+            </div>
+
+            <!-- Añadiendo sistema de pestañas para las nuevas vistas -->
+            <div class="tabs-container">
+                <div class="tabs-nav">
+                    <button class="tab-button active" onclick="evaluationSystem.switchTab('resumen')" data-tab="resumen">
+                        📊 Resumen
+                    </button>
+                    <button class="tab-button" onclick="evaluationSystem.switchTab('empleado')" data-tab="empleado">
+                        👤 Por Empleado
+                    </button>
+                    <button class="tab-button" onclick="evaluationSystem.switchTab('categoria')" data-tab="categoria">
+                        👁️ Por Categoría
+                    </button>
+                    <button class="tab-button" onclick="evaluationSystem.switchTab('tendencias')" data-tab="tendencias">
+                        📈 Tendencias
+                    </button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- Vista de Resumen -->
+                    <div id="resumen-tab" class="tab-pane active">
+                        <div class="summary-grid" id="summaryGrid">
+                            <!-- Se llenará dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Vista Por Empleado -->
+                    <div id="empleado-tab" class="tab-pane">
+                        <h3 style="margin-bottom: 20px;">Rendimiento por Empleado</h3>
+                        <div class="employee-list" id="employeeList">
+                            <!-- Se llenará dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Vista Por Categoría -->
+                    <div id="categoria-tab" class="tab-pane">
+                        <div class="categories-grid" id="categoriesGrid">
+                            <!-- Se llenará dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Vista de Tendencias -->
+                    <div id="tendencias-tab" class="tab-pane">
+                        <div class="trends-container">
+                            <div class="trends-header">
+                                <h3 class="trends-title">Tendencias Semanales</h3>
+                            </div>
+                            <div class="trends-chart">
+                                <div class="chart-placeholder">Gráfico de tendencias por semana</div>
+                            </div>
+                            <div class="trends-summary" id="trendsSummary">
+                                <!-- Se llenará dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controles para selección de semana -->
+            <div class="controls">
+                <div class="controls-grid">
+                    <div class="form-group">
+                        <label for="weekSelect">Seleccionar Semana:</label>
+                        <select id="weekSelect" onchange="evaluationSystem.loadWeek()">
+                            <option value="">Seleccionar semana...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate">Fecha Inicio:</label>
+                        <input type="text" id="startDate" placeholder="DD/MM/YYYY">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">Fecha Fin:</label>
+                        <input type="text" id="endDate" placeholder="DD/MM/YYYY">
+                    </div>
+                    <div>
+                        <button onclick="evaluationSystem.createNewWeek()">Nueva Semana</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Evaluación Semanal (tabla original) -->
+            <div id="evaluationSection" class="hidden">
+                <h2 id="weekHeader" style="margin-bottom: 20px;"></h2>
+                
+                <div id="statsGrid" class="stats-grid"></div>
+                
+                <div class="weekly-table-container">
+                    <table class="evaluation-table">
+                        <thead id="weeklyTableHeader"></thead>
+                        <tbody id="evaluationTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sección de Reportes -->
+            <div class="reports-section">
+                <h3 style="margin-bottom: 20px;">Generar Reportes</h3>
+                <div class="controls-grid">
+                    <div class="form-group">
+                        <label for="reportStartDate">Fecha Inicio:</label>
+                        <input type="text" id="reportStartDate" placeholder="DD/MM/YYYY">
+                    </div>
+                    <div class="form-group">
+                        <label for="reportEndDate">Fecha Fin:</label>
+                        <input type="text" id="reportEndDate" placeholder="DD/MM/YYYY">
+                    </div>
+                    <div class="form-group">
+                        <label for="reportEmployee">Empleado (opcional):</label>
+                        <select id="reportEmployee">
+                            <option value="">Todos los empleados</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button onclick="evaluationSystem.generatePDFReport()">Generar PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Clase principal del sistema, usando POO para encapsular toda la lógica.
+         * Optimizaciones incorporadas:
+         * - DocumentFragment para renderizado eficiente del DOM.
+         * - Debouncing para guardar en localStorage.
+         * - Compresión de datos al guardar (solo item, derivar checked).
+         * - Configuración dinámica de días, categorías e items.
+         * - Manejo robusto de errores con try-catch y notificaciones.
+         * - Autenticación con contraseña.
+         * - Filtros en reportes (empleado).
+         * - Checkboxes editables.
+         * - Sanitización de entradas.
+         * - Cifrado simple para localStorage.
+         * - Modo debug con logging opcional (activar con this.debug = true).
+         * - Validación avanzada de fechas.
+         * - Spinner para operaciones de guardado.
+         * - Estructura modular dentro de la clase (ui, data).
+         * - Límite de semanas almacenadas (max 10).
+         * 
+         * Todo agregado sin romper funcionalidad original.
+         */
+        class EmployeeEvaluationSystem {
+            constructor() {
+                // Configuración dinámica
+                this.days = ['LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES'];
+                this.categories = ['ASISTENCIA', 'PLÁTICAS', 'PRODUCTIVIDAD', 'ACTITUD'];
+                this.categoryMapping = {
+                    'ASISTENCIA': 'asistencia',
+                    'PLÁTICAS': 'platicas',
+                    'PRODUCTIVIDAD': 'productividad',
+                    'ACTITUD': 'actitud'
+                };
+                this.evaluationItems = {
+                    asistencia: [
+                        'Sin problemas',
+                        'Llegó tarde',
+                        'Pausa excesiva',
+                        'Salió temprano',
+                        'Falta injustificada'
+                    ],
+                    platicas: [
+                        'Sin problemas',
+                        'Plática excesiva',
+                        'Plática entre compañeros',
+                        'Uso de teléfono personal',
+                        'Distracción general'
+                    ],
+                    productividad: [
+                        'Sin problemas',
+                        'Bajo rendimiento',
+                        'Errores frecuentes',
+                        'Lentitud en tareas',
+                        'No cumple objetivos'
+                    ],
+                    actitud: [
+                        'Sin problemas',
+                        'Actitud negativa',
+                        'Falta de cooperación',
+                        'Conflictos con compañeros',
+                        'Resistencia a instrucciones'
+                    ]
+                };
+
+                // Datos iniciales de managers y empleados (pueden cargarse de JSON externo)
+                this.managers = {
+                    'MGR001': {
+                        name: 'DAVID MALDONADO',
+                        employees: [
+                            { id: 'EMP001', name: 'LOURDES RAQUEL AGUIRRE' },
+                            { id: 'EMP002', name: 'ERICKA DANIELA MARTINEZ' },
+                            { id: 'EMP003', name: 'ASTRID MARIELA COLINDRES ZELAYA' },
+                            { id: 'EMP004', name: 'EVELYN DANIELA OSEGUERA AGUILAR' },
+                            { id: 'EMP005', name: 'ANGEL DAVID ALVARENGA MARTINEZ' }
+                        ]
+                    },
+                    'MGR002': {
+                        name: 'ANA GARCÍA',
+                        employees: [
+                            { id: 'EMP006', name: 'JUAN CARLOS MENDEZ' },
+                            { id: 'EMP007', name: 'SOFIA ELENA TORRES' },
+                            { id: 'EMP008', name: 'RICARDO ANTONIO FLORES' },
+                            { id: 'EMP009', name: 'PATRICIA ISABEL MORALES' },
+                            { id: 'EMP010', name: 'FERNANDO JOSE HERRERA' }
+                        ]
+                    },
+                    'MGR003': {
+                        name: 'CARLOS LÓPEZ',
+                        employees: [
+                            { id: 'EMP011', name: 'CLAUDIA PATRICIA RIVERA' },
+                            { id: 'EMP012', name: 'MIGUEL ANGEL SANTOS' },
+                            { id: 'EMP013', name: 'ANDREA LUCIA VARGAS' },
+                            { id: 'EMP014', name: 'JOSE MANUEL CASTRO' },
+                            { id: 'EMP015', name: 'GABRIELA MARIA JIMENEZ' }
+                        ]
+                    },
+                    'MGR004': {
+                        name: 'MARÍA RODRÍGUEZ',
+                        employees: [
+                            { id: 'EMP016', name: 'ROBERTO CARLOS PEÑA' },
+                            { id: 'EMP017', name: 'VALERIA ALEJANDRA CRUZ' },
+                            { id: 'EMP018', name: 'DIEGO FERNANDO RAMOS' },
+                            { id: 'EMP019', name: 'CAROLINA BEATRIZ ORTEGA' },
+                            { id: 'EMP020', name: 'ALEJANDRO DAVID SILVA' }
+                        ]
+                    }
+                };
+
+                // Contraseñas para autenticación
+                this.managerPasswords = {
+                    'MGR001': 'password1',
+                    'MGR002': 'password2',
+                    'MGR003': 'password3',
+                    'MGR004': 'password4'
+                };
+
+                // Estado
+                this.currentManager = null;
+                this.currentWeek = null;
+                this.evaluationData = {};
+                this.activeTab = 'resumen';
+
+                // Optimizaciones
+                this.saveTimeout = null;
+                this.encryptionKey = 'my-secret-key'; // Clave para cifrado simple
+
+                // Modo debug (activar para logging detallado)
+                this.debug = true; // Cambiar a false para desactivar
+
+                // Módulos internos (para modularidad en POO)
+                this.ui = {
+                    renderWeeklyTable: this.renderWeeklyEvaluationTable.bind(this),
+                    updateStats: this.updateStats.bind(this),
+                    showError: this.showError.bind(this),
+                    showSpinner: this.showSpinner.bind(this),
+                    hideSpinner: this.hideSpinner.bind(this)
+                };
+
+                this.data = {
+                    save: this.saveData.bind(this),
+                    load: this.loadStoredData.bind(this)
+                };
+
+                // Cargar datos almacenados
+                this.loadStoredData();
+                
+                this.loadManagerOptions();
+            }
+
+            loadManagerOptions() {
+                const managerSelect = document.getElementById('managerId');
+                managerSelect.innerHTML = '<option value="">-- Seleccione un manager --</option>';
+                
+                Object.keys(this.managers).forEach(managerId => {
+                    const option = document.createElement('option');
+                    option.value = managerId;
+                    option.textContent = `${managerId} - ${this.managers[managerId].name}`;
+                    managerSelect.appendChild(option);
+                });
+                
+                this.logDebug('Opciones de managers cargadas');
+            }
+
+            // Método de logging para debug
+            logDebug(message) {
+                if (this.debug) {
+                    console.log(`[DEBUG] ${new Date().toISOString()} - ${message}`);
+                }
+            }
+
+            // Sanitización de entradas
+            sanitizeInput(input) {
+                const div = document.createElement('div');
+                div.textContent = input;
+                return div.innerHTML;
+            }
+
+            // Mostrar errores
+            showError(message) {
+                this.logDebug(`Error mostrado: ${message}`);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = message;
+                document.body.appendChild(errorDiv);
+                setTimeout(() => errorDiv.remove(), 3000);
+            }
+
+            // Mostrar spinner
+            showSpinner(message = 'Guardando...') {
+                const spinner = document.createElement('div');
+                spinner.id = 'spinner';
+                spinner.className = 'spinner';
+                spinner.textContent = message;
+                document.body.appendChild(spinner);
+            }
+
+            // Ocultar spinner
+            hideSpinner() {
+                const spinner = document.getElementById('spinner');
+                if (spinner) spinner.remove();
+            }
+
+            switchTab(tabName) {
+                try {
+                    // Actualizar botones de pestañas
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+                    // Actualizar contenido de pestañas
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('active');
+                    });
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+
+                    this.activeTab = tabName;
+
+                    // Renderizar contenido específico de la pestaña
+                    switch(tabName) {
+                        case 'resumen':
+                            this.renderSummaryView();
+                            break;
+                        case 'empleado':
+                            this.renderEmployeeView();
+                            break;
+                        case 'categoria':
+                            this.renderCategoryView();
+                            break;
+                        case 'tendencias':
+                            this.renderTrendsView();
+                            break;
+                    }
+
+                    this.logDebug(`Cambiado a pestaña: ${tabName}`);
+                } catch (error) {
+                    this.showError('Error cambiando de pestaña');
+                    this.logDebug(`Error en switchTab: ${error.message}`);
+                }
+            }
+
+            renderSummaryView() {
+                try {
+                    const summaryGrid = document.getElementById('summaryGrid');
+                    
+                    // Calcular estadísticas generales
+                    let totalEvaluations = 0;
+                    let successfulEvaluations = 0;
+                    let problemsDetected = 0;
+                    let activeEmployees = 0;
+
+                    if (this.currentManager && this.evaluationData[this.currentManager]) {
+                        const managerData = this.evaluationData[this.currentManager];
+                        activeEmployees = this.managers[this.currentManager].employees.length;
+
+                        Object.keys(managerData).forEach(weekKey => {
+                            const weekData = managerData[weekKey];
+                            Object.keys(weekData).forEach(employeeId => {
+                                weekData[employeeId].forEach(dayData => {
+                                    this.categories.forEach(category => {
+                                        totalEvaluations++;
+                                        if (dayData[category] && dayData[category].checked) {
+                                            successfulEvaluations++;
+                                        } else {
+                                            problemsDetected++;
+                                        }
+                                    });
+                                });
+                            });
+                        });
+                    } else {
+                        // Datos por defecto si no hay manager seleccionado
+                        activeEmployees = 10;
+                    }
+
+                    const successRate = totalEvaluations > 0 ? Math.round((successfulEvaluations / totalEvaluations) * 100) : 100;
+
+                    summaryGrid.innerHTML = `
+                        <div class="summary-card blue">
+                            <div class="summary-card-icon">📋</div>
+                            <div class="summary-card-value">${totalEvaluations}</div>
+                            <div class="summary-card-label">Total Evaluaciones</div>
+                        </div>
+                        <div class="summary-card green">
+                            <div class="summary-card-icon">✅</div>
+                            <div class="summary-card-value">${successRate}%</div>
+                            <div class="summary-card-label">Tasa de Éxito</div>
+                        </div>
+                        <div class="summary-card red">
+                            <div class="summary-card-icon">⚠️</div>
+                            <div class="summary-card-value">${problemsDetected}</div>
+                            <div class="summary-card-label">Problemas Detectados</div>
+                        </div>
+                        <div class="summary-card purple">
+                            <div class="summary-card-icon">👥</div>
+                            <div class="summary-card-value">${activeEmployees}</div>
+                            <div class="summary-card-label">Empleados Activos</div>
+                        </div>
+                    `;
+
+                    this.logDebug('Vista de resumen renderizada');
+                } catch (error) {
+                    this.showError('Error renderizando vista de resumen');
+                    this.logDebug(`Error en renderSummaryView: ${error.message}`);
+                }
+            }
+
+            renderEmployeeView() {
+                try {
+                    const employeeList = document.getElementById('employeeList');
+                    
+                    if (!this.currentManager) {
+                        employeeList.innerHTML = '<p style="text-align: center; padding: 40px; color: #6c757d;">Seleccione un manager para ver los empleados</p>';
+                        return;
+                    }
+
+                    const employees = this.managers[this.currentManager].employees;
+                    let employeeHTML = '';
+
+                    employees.forEach(employee => {
+                        // Calcular rendimiento por categoría
+                        const categoryScores = {};
+                        this.categories.forEach(category => {
+                            categoryScores[category] = this.calculateEmployeeCategoryScore(employee.id, category);
+                        });
+
+                        const overallScore = Math.round(
+                            Object.values(categoryScores).reduce((sum, score) => sum + score, 0) / this.categories.length
+                        );
+
+                        employeeHTML += `
+                            <div class="employee-item">
+                                <div class="employee-header">
+                                    <div>
+                                        <div class="employee-name">${employee.name}</div>
+                                        <div class="employee-id">${employee.id}</div>
+                                    </div>
+                                    <div class="employee-score">${overallScore}%</div>
+                                </div>
+                                <div class="employee-categories">
+                                    ${this.categories.map(category => `
+                                        <div class="category-score">
+                                            <div class="category-name">${category}</div>
+                                            <div class="category-percentage">${categoryScores[category]}%</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    employeeList.innerHTML = employeeHTML;
+                    this.logDebug('Vista por empleado renderizada');
+                } catch (error) {
+                    this.showError('Error renderizando vista por empleado');
+                    this.logDebug(`Error en renderEmployeeView: ${error.message}`);
+                }
+            }
+
+            calculateEmployeeCategoryScore(employeeId, category) {
+                try {
+                    if (!this.currentManager || !this.evaluationData[this.currentManager]) {
+                        return 100; // Valor por defecto
+                    }
+
+                    let totalEvaluations = 0;
+                    let successfulEvaluations = 0;
+
+                    const managerData = this.evaluationData[this.currentManager];
+                    Object.keys(managerData).forEach(weekKey => {
+                        const weekData = managerData[weekKey];
+                        if (weekData[employeeId]) {
+                            weekData[employeeId].forEach(dayData => {
+                                if (dayData[category]) {
+                                    totalEvaluations++;
+                                    if (dayData[category].checked) {
+                                        successfulEvaluations++;
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    return totalEvaluations > 0 ? Math.round((successfulEvaluations / totalEvaluations) * 100) : 100;
+                } catch (error) {
+                    this.logDebug(`Error calculando puntuación de empleado: ${error.message}`);
+                    return 100;
+                }
+            }
+
+            renderCategoryView() {
+                try {
+                    const categoriesGrid = document.getElementById('categoriesGrid');
+                    let categoriesHTML = '';
+
+                    this.categories.forEach(category => {
+                        const categoryStats = this.calculateCategoryStats(category);
+                        
+                        categoriesHTML += `
+                            <div class="category-card">
+                                <div class="category-title">${category}</div>
+                                <div class="category-progress">
+                                    <div class="progress-label">
+                                        <span>Rendimiento General</span>
+                                        <span>${categoryStats.percentage}%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${categoryStats.percentage}%"></div>
+                                    </div>
+                                </div>
+                                <div class="category-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-value">${categoryStats.totalEvaluations}</div>
+                                        <div class="stat-label">Total Evaluaciones</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">${categoryStats.problems}</div>
+                                        <div class="stat-label">Problemas Detectados</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    categoriesGrid.innerHTML = categoriesHTML;
+                    this.logDebug('Vista por categoría renderizada');
+                } catch (error) {
+                    this.showError('Error renderizando vista por categoría');
+                    this.logDebug(`Error en renderCategoryView: ${error.message}`);
+                }
+            }
+
+            calculateCategoryStats(category) {
+                try {
+                    let totalEvaluations = 0;
+                    let successfulEvaluations = 0;
+                    let problems = 0;
+
+                    if (this.currentManager && this.evaluationData[this.currentManager]) {
+                        const managerData = this.evaluationData[this.currentManager];
+                        Object.keys(managerData).forEach(weekKey => {
+                            const weekData = managerData[weekKey];
+                            Object.keys(weekData).forEach(employeeId => {
+                                weekData[employeeId].forEach(dayData => {
+                                    if (dayData[category]) {
+                                        totalEvaluations++;
+                                        if (dayData[category].checked) {
+                                            successfulEvaluations++;
+                                        } else {
+                                            problems++;
+                                        }
+                                    }
+                                });
+                            });
+                        });
+                    }
+
+                    const percentage = totalEvaluations > 0 ? Math.round((successfulEvaluations / totalEvaluations) * 100) : 100;
+
+                    return {
+                        totalEvaluations,
+                        successfulEvaluations,
+                        problems,
+                        percentage
+                    };
+                } catch (error) {
+                    this.logDebug(`Error calculando estadísticas de categoría: ${error.message}`);
+                    return { totalEvaluations: 0, successfulEvaluations: 0, problems: 0, percentage: 100 };
+                }
+            }
+
+            renderTrendsView() {
+                try {
+                    const trendsSummary = document.getElementById('trendsSummary');
+                    
+                    // Calcular tendencias básicas
+                    const trends = this.calculateTrends();
+                    
+                    trendsSummary.innerHTML = `
+                        <div class="trend-item">
+                            <div class="trend-value trend-${trends.overall.trend}">${trends.overall.value}%</div>
+                            <div class="trend-label">Rendimiento General</div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-value trend-${trends.attendance.trend}">${trends.attendance.value}%</div>
+                            <div class="trend-label">Asistencia</div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-value trend-${trends.productivity.trend}">${trends.productivity.value}%</div>
+                            <div class="trend-label">Productividad</div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-value trend-${trends.attitude.trend}">${trends.attitude.value}%</div>
+                            <div class="trend-label">Actitud</div>
+                        </div>
+                    `;
+
+                    this.logDebug('Vista de tendencias renderizada');
+                } catch (error) {
+                    this.showError('Error renderizando vista de tendencias');
+                    this.logDebug(`Error en renderTrendsView: ${error.message}`);
+                }
+            }
+
+            calculateTrends() {
+                try {
+                    const trends = {
+                        overall: { value: 95, trend: 'up' },
+                        attendance: { value: 98, trend: 'stable' },
+                        productivity: { value: 92, trend: 'up' },
+                        attitude: { value: 96, trend: 'stable' }
+                    };
+
+                    // Si hay datos reales, calcular tendencias basadas en datos
+                    if (this.currentManager && this.evaluationData[this.currentManager]) {
+                        const categoryStats = {};
+                        this.categories.forEach(category => {
+                            const stats = this.calculateCategoryStats(category);
+                            categoryStats[category] = stats.percentage;
+                        });
+
+                        trends.attendance.value = categoryStats['ASISTENCIA'] || 100;
+                        trends.productivity.value = categoryStats['PRODUCTIVIDAD'] || 100;
+                        trends.attitude.value = categoryStats['ACTITUD'] || 100;
+                        
+                        const overall = Math.round(
+                            Object.values(categoryStats).reduce((sum, val) => sum + val, 0) / this.categories.length
+                        );
+                        trends.overall.value = overall || 95;
+                    }
+
+                    return trends;
+                } catch (error) {
+                    this.logDebug(`Error calculando tendencias: ${error.message}`);
+                    return {
+                        overall: { value: 95, trend: 'stable' },
+                        attendance: { value: 98, trend: 'stable' },
+                        productivity: { value: 92, trend: 'stable' },
+                        attitude: { value: 96, trend: 'stable' }
+                    };
+                }
+            }
+
+            // Login con autenticación
+            login() {
+                try {
+                    const managerId = document.getElementById('managerId').value;
+                    const password = document.getElementById('managerPassword').value;
+                    if (!managerId || !password) {
+                        throw new Error('Por favor ingrese ID y contraseña');
+                    }
+                    if (this.managerPasswords[managerId] !== password) {
+                        throw new Error('Contraseña incorrecta');
+                    }
+
+                    this.currentManager = managerId;
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('mainScreen').classList.remove('hidden');
+                    document.getElementById('managerHeader').textContent = `MANAGER ${this.managers[managerId].name}`;
+                    
+                    this.loadWeekOptions();
+                    this.loadEmployeeOptions();
+                    this.renderSummaryView();
+                    this.logDebug(`Login exitoso para manager ${managerId}`);
+                } catch (error) {
+                    this.showError(error.message);
+                }
+            }
+
+            // Cargar opciones de empleados para reportes
+            loadEmployeeOptions() {
+                const employeeSelect = document.getElementById('reportEmployee');
+                employeeSelect.innerHTML = '<option value="">Todos los empleados</option>';
+                
+                this.managers[this.currentManager].employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.textContent = employee.name;
+                    employeeSelect.appendChild(option);
+                });
+            }
+
+
+            // Cargar opciones de semanas
+            loadWeekOptions() {
+                const weekSelect = document.getElementById('weekSelect');
+                weekSelect.innerHTML = '<option value="">Seleccionar semana...</option>';
+                
+                const managerData = this.evaluationData[this.currentManager] || {};
+                Object.keys(managerData).sort().forEach(weekKey => {
+                    const option = document.createElement('option');
+                    option.value = weekKey;
+                    option.textContent = weekKey;
+                    weekSelect.appendChild(option);
+                });
+            }
+
+            // Validación avanzada de fechas
+            validateWeekDates(startDateInput, endDateInput) {
+                try {
+                    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                    if (!dateRegex.test(startDateInput) || !dateRegex.test(endDateInput)) {
+                        throw new Error('Formato de fecha inválido. Use DD/MM/YYYY');
+                    }
+
+                    const [, startDay, startMonth, startYear] = startDateInput.match(dateRegex);
+                    const [, endDay, endMonth, endYear] = endDateInput.match(dateRegex);
+                    
+                    const startDate = new Date(startYear, startMonth - 1, startDay);
+                    const endDate = new Date(endYear, endMonth - 1, endDay);
+                    
+                    if (startDate >= endDate) {
+                        throw new Error('La fecha de inicio debe ser anterior a la fecha de fin');
+                    }
+                    
+                    const diffTime = Math.abs(endDate - startDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays !== 4) {
+                        throw new Error('El período debe ser exactamente de 5 días (lunes a viernes)');
+                    }
+                    
+                    if (startDate.getDay() !== 1) {
+                        throw new Error('La fecha de inicio debe ser un lunes');
+                    }
+
+                    return { startDate, endDate, isValid: true };
+                } catch (error) {
+                    throw error;
+                }
+            }
+
+            // Crear nueva semana
+            createNewWeek() {
+                try {
+                    const startDateInput = this.sanitizeInput(document.getElementById('startDate').value);
+                    const endDateInput = this.sanitizeInput(document.getElementById('endDate').value);
+                    
+                    if (!startDateInput || !endDateInput) {
+                        throw new Error('Por favor ingrese ambas fechas');
+                    }
+
+                    const validation = this.validateWeekDates(startDateInput, endDateInput);
+                    
+                    const weekKey = `${startDateInput} - ${endDateInput}`;
+                    
+                    // Verificar si la semana ya existe
+                    if (this.evaluationData[this.currentManager] && this.evaluationData[this.currentManager][weekKey]) {
+                        throw new Error('Esta semana ya existe');
+                    }
+
+                    // Límite de semanas almacenadas
+                    if (this.evaluationData[this.currentManager] && Object.keys(this.evaluationData[this.currentManager]).length >= 10) {
+                        throw new Error('Máximo 10 semanas almacenadas. Elimine semanas antiguas primero.');
+                    }
+
+                    // Inicializar estructura de datos para la nueva semana
+                    if (!this.evaluationData[this.currentManager]) {
+                        this.evaluationData[this.currentManager] = {};
+                    }
+
+                    this.evaluationData[this.currentManager][weekKey] = {};
+                    
+                    // Inicializar datos para cada empleado
+                    this.managers[this.currentManager].employees.forEach(employee => {
+                        this.evaluationData[this.currentManager][weekKey][employee.id] = [];
+                        
+                        // Crear estructura para cada día de la semana
+                        for (let dayIndex = 0; dayIndex < this.days.length; dayIndex++) {
+                            const dayData = {};
+                            this.categories.forEach(category => {
+                                const categoryKey = this.categoryMapping[category];
+                                dayData[category] = {
+                                    item: this.evaluationItems[categoryKey][0], // 'Sin problemas' por defecto
+                                    checked: true
+                                };
+                            });
+                            this.evaluationData[this.currentManager][weekKey][employee.id].push(dayData);
+                        }
+                    });
+
+                    this.currentWeek = weekKey;
+                    this.data.save();
+                    this.loadWeekOptions();
+                    
+                    // Actualizar el select para mostrar la nueva semana
+                    document.getElementById('weekSelect').value = weekKey;
+                    this.ui.renderWeeklyTable();
+                    document.getElementById('evaluationSection').classList.remove('hidden');
+                    document.getElementById('weekHeader').textContent = weekKey;
+                    
+                    // Limpiar campos de fecha
+                    document.getElementById('startDate').value = '';
+                    document.getElementById('endDate').value = '';
+                    
+                    this.logDebug(`Nueva semana creada: ${weekKey}`);
+                } catch (error) {
+                    this.showError(error.message);
+                }
+            }
+
+            // Renderizar tabla de evaluación semanal
+            renderWeeklyEvaluationTable() {
+                try {
+                    const tableHeader = document.getElementById('weeklyTableHeader');
+                    tableHeader.innerHTML = `
+                        <tr>
+                            <th rowspan="2">EMPLEADO</th>
+                            ${this.days.map(day => `
+                                <th colspan="${this.categories.length * 2}" class="day-header">${day}</th>
+                            `).join('')}
+                        </tr>
+                        <tr>
+                            ${this.days.map(() => this.categories.map(category => `
+                                <th class="category-header">✓</th>
+                                <th class="category-header">${category}</th>
+                            `).join('')).join('')}
+                        </tr>
+                    `;
+
+                    const tableBody = document.getElementById('evaluationTableBody');
+                    const fragment = document.createDocumentFragment();
+
+                    if (!this.currentWeek || !this.evaluationData[this.currentManager] || !this.evaluationData[this.currentManager][this.currentWeek]) {
+                        tableBody.innerHTML = '';
+                        return;
+                    }
+
+                    const weekData = this.evaluationData[this.currentManager][this.currentWeek];
+
+                    this.managers[this.currentManager].employees.forEach(employee => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td class="employee-name">${this.sanitizeInput(employee.name)}</td>`;
+                        
+                        for (let dayIndex = 0; dayIndex < this.days.length; dayIndex++) {
+                            const dayData = weekData[employee.id][dayIndex];
+                            
+                            this.categories.forEach(category => {
+                                const isChecked = dayData[category].checked ? 'checked' : '';
+                                const selectClass = dayData[category].checked ? '' : 'has-issue';
+                                const categoryKey = this.categoryMapping[category];
+
+                                row.innerHTML += `
+                                    <td>
+                                        <div class="checkbox-container">
+                                            <input type="checkbox" class="evaluation-checkbox" 
+                                                   ${isChecked} 
+                                                   onchange="evaluationSystem.updateEvaluation('${employee.id}', ${dayIndex}, '${category}', 'checked', this.checked)">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="item-select ${selectClass}" 
+                                                onchange="evaluationSystem.updateEvaluation('${employee.id}', ${dayIndex}, '${category}', 'item', this.value)">
+                                                ${this.evaluationItems[categoryKey].map(item => `
+                                                    <option value="${item}" ${item === dayData[category].item ? 'selected' : ''}>${item}</option>
+                                                `).join('')}
+                                        </select>
+                                    </td>
+                                `;
+                            });
+                        }
+                        
+                        fragment.appendChild(row);
+                    });
+
+                    tableBody.innerHTML = '';
+                    tableBody.appendChild(fragment);
+                    this.ui.updateStats();
+                    this.logDebug('Tabla semanal renderizada');
+                } catch (error) {
+                    this.showError('Error renderizando tabla semanal');
+                    this.logDebug(`Error en renderWeeklyEvaluationTable: ${error.message}`);
+                }
+            }
+
+            // Actualizar evaluación
+            updateEvaluation(employeeId, dayIndex, category, field, value) {
+                try {
+                    if (!this.currentWeek || !this.evaluationData[this.currentManager] || !this.evaluationData[this.currentManager][this.currentWeek]) {
+                        throw new Error('No hay semana seleccionada');
+                    }
+
+                    const weekData = this.evaluationData[this.currentManager][this.currentWeek];
+                    
+                    if (!weekData[employeeId] || !weekData[employeeId][dayIndex]) {
+                        throw new Error('Datos de empleado o día no encontrados');
+                    }
+
+                    const categoryKey = this.categoryMapping[category];
+                    if (!categoryKey || !this.evaluationItems[categoryKey]) {
+                        throw new Error('Categoría no válida');
+                    }
+
+                    if (field === 'checked') {
+                        weekData[employeeId][dayIndex][category].checked = value;
+                        // Si se marca como correcto, establecer 'Sin problemas'
+                        if (value) {
+                            weekData[employeeId][dayIndex][category].item = 'Sin problemas';
+                        }
+                    } else if (field === 'item') {
+                        weekData[employeeId][dayIndex][category].item = value;
+                        // Si se selecciona 'Sin problemas', marcar checkbox
+                        weekData[employeeId][dayIndex][category].checked = (value === 'Sin problemas');
+                    }
+
+                    this.data.save();
+                    this.ui.updateStats();
+                    if (this.activeTab !== 'resumen') {
+                        this.switchTab(this.activeTab);
+                    } else {
+                        this.renderSummaryView();
+                    }
+                    this.logDebug(`Evaluación actualizada: ${employeeId}, día ${dayIndex}, ${category}, ${field} = ${value}`);
+                } catch (error) {
+                    this.showError(error.message);
+                    this.logDebug(`Error en updateEvaluation: ${error.message}`);
+                }
+            }
+
+            // Actualizar estadísticas
+            updateStats() {
+                try {
+                    if (!this.currentWeek || !this.evaluationData[this.currentManager] || !this.evaluationData[this.currentManager][this.currentWeek]) {
+                        return;
+                    }
+
+                    const statsGrid = document.getElementById('statsGrid');
+                    statsGrid.innerHTML = '';
+
+                    const weekData = this.evaluationData[this.currentManager][this.currentWeek];
+                    const employees = this.managers[this.currentManager].employees;
+
+                    for (let dayIndex = 0; dayIndex < this.days.length; dayIndex++) {
+                        const dayName = this.days[dayIndex];
+                        
+                        let totalEmployees = employees.length;
+                        let perfectEmployees = 0;
+                        let categoryStats = {};
+                        this.categories.forEach(cat => categoryStats[cat] = 0);
+
+                        employees.forEach(employee => {
+                            const employeeData = weekData[employee.id][dayIndex];
+                            if (employeeData) {
+                                let isPerfect = true;
+                                this.categories.forEach(category => {
+                                    if (employeeData[category] && employeeData[category].checked) {
+                                        categoryStats[category]++;
+                                    } else {
+                                        isPerfect = false;
+                                    }
+                                });
+                                if (isPerfect) perfectEmployees++;
+                            }
+                        });
+
+                        statsGrid.innerHTML += `
+                            <div class="stat-item">
+                                <div class="stat-number">${perfectEmployees}/${totalEmployees}</div>
+                                <div>Perfectos ${dayName}</div>
+                            </div>
+                        `;
+                    }
+                    this.logDebug('Estadísticas actualizadas');
+                } catch (error) {
+                    this.showError('Error actualizando estadísticas');
+                    this.logDebug(`Error en updateStats: ${error.message}`);
+                }
+            }
+
+            // Cargar semana
+            loadWeek() {
+                try {
+                    const weekKey = document.getElementById('weekSelect').value;
+                    if (!weekKey) {
+                        throw new Error('Por favor selecciona una semana');
+                    }
+
+                    this.currentWeek = weekKey;
+                    this.ui.renderWeeklyTable();
+                    document.getElementById('evaluationSection').classList.remove('hidden');
+                    document.getElementById('weekHeader').textContent = weekKey;
+                    this.switchTab(this.activeTab);
+                    this.logDebug(`Semana cargada: ${weekKey}`);
+                } catch (error) {
+                    this.showError(error.message);
+                }
+            }
+
+            // Guardar datos con debouncing, compresión y cifrado
+            saveData() {
+                clearTimeout(this.saveTimeout);
+                this.saveTimeout = setTimeout(() => {
+                    try {
+                        this.ui.showSpinner();
+                        const compactData = {};
+                        Object.keys(this.evaluationData).forEach(managerId => {
+                            compactData[managerId] = {};
+                            Object.keys(this.evaluationData[managerId]).forEach(weekKey => {
+                                compactData[managerId][weekKey] = {};
+                                Object.keys(this.evaluationData[managerId][weekKey]).forEach(empId => {
+                                    compactData[managerId][weekKey][empId] = this.evaluationData[managerId][weekKey][empId].map(day => {
+                                        const compactDay = {};
+                                        Object.keys(day).forEach(category => {
+                                            compactDay[category] = day[category].item; // Solo item
+                                        });
+                                        return compactDay;
+                                    });
+                                });
+                            });
+                        });
+
+                        const dataStr = JSON.stringify(compactData);
+                        const encrypted = btoa(dataStr.split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ this.encryptionKey.charCodeAt(i % this.encryptionKey.length))).join(''));
+                        localStorage.setItem('employeeEvaluationData', encrypted);
+                        this.logDebug('Datos guardados con éxito');
+                    } catch (error) {
+                        this.showError('Error guardando datos');
+                        this.logDebug(`Error en saveData: ${error.message}`);
+                    } finally {
+                        this.ui.hideSpinner();
+                    }
+                }, 1000);
+            }
+
+            // Cargar datos con descifrado y reconstrucción
+            loadStoredData() {
+                try {
+                    const encrypted = localStorage.getItem('employeeEvaluationData');
+                    if (encrypted) {
+                        const decrypted = atob(encrypted).split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ this.encryptionKey.charCodeAt(i % this.encryptionKey.length))).join('');
+                        const compactData = JSON.parse(decrypted);
+                        this.evaluationData = {};
+                        Object.keys(compactData).forEach(managerId => {
+                            this.evaluationData[managerId] = {};
+                            Object.keys(compactData[managerId]).forEach(weekKey => {
+                                this.evaluationData[managerId][weekKey] = {};
+                                Object.keys(compactData[managerId][weekKey]).forEach(empId => {
+                                    this.evaluationData[managerId][weekKey][empId] = compactData[managerId][weekKey][empId].map(day => {
+                                        const fullDay = {};
+                                        Object.keys(day).forEach(category => {
+                                            fullDay[category] = {
+                                                item: day[category],
+                                                checked: day[category] === 'Sin problemas'
+                                            };
+                                        });
+                                        return fullDay;
+                                    });
+                                });
+                            });
+                        });
+                        this.logDebug('Datos cargados con éxito');
+                    }
+                } catch (error) {
+                    this.showError('Error cargando datos');
+                    this.logDebug(`Error en loadStoredData: ${error.message}`);
+                }
+            }
+
+            // Generar PDF con filtros
+            generatePDFReport() {
+                try {
+                    const startDate = this.sanitizeInput(document.getElementById('reportStartDate').value);
+                    const endDate = this.sanitizeInput(document.getElementById('reportEndDate').value);
+                    const employeeId = document.getElementById('reportEmployee').value;
+                    
+                    if (!startDate || !endDate) {
+                        throw new Error('Por favor ingrese ambas fechas');
+                    }
+                    
+                    let pdfContent = `
+                        <html>
+                        <head>
+                            <title>Reporte de Evaluaciones</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; font-size: 12px; }
+                                table { border-collapse: collapse; margin: 10px 0; }
+                                th, td { border: 1px solid #ddd; padding: 4px; }
+                                th { background-color: #4CAF50; color: white; }
+                                .header { text-align: center; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="header">
+                                <h1>Reporte de Evaluaciones</h1>
+                                <p>Período: ${startDate} - ${endDate}</p>
+                                <p>Manager: ${this.managers[this.currentManager].name}</p>
+                            </div>
+                    `;
+                    
+                    const managerData = this.evaluationData[this.currentManager] || {};
+                    Object.keys(managerData).forEach(weekKey => {
+                        if (weekKey >= startDate && weekKey <= endDate) { // Filtro simple por fechas
+                            pdfContent += `<h2>Semana: ${weekKey}</h2>`;
+                            pdfContent += this.generateReportTable(managerData[weekKey], employeeId);
+                        }
+                    });
+                    
+                    pdfContent += '</body></html>';
+                    
+                    const printWindow = window.open('', '_blank');
+                    printWindow.document.write(pdfContent);
+                    printWindow.document.close();
+                    printWindow.print();
+                    this.logDebug('Reporte PDF generado');
+                } catch (error) {
+                    this.showError(error.message);
+                    this.logDebug(`Error en generatePDFReport: ${error.message}`);
+                }
+            }
+
+            // Generar tabla para reportes
+            generateReportTable(weekData, filterEmployeeId = '') {
+                let tableHTML = '<table><thead><tr><th>Empleado</th><th>Día</th><th>Categoría</th><th>Estado</th><th>Item</th></tr></thead><tbody>';
+                
+                Object.keys(weekData).forEach(employeeId => {
+                    if (filterEmployeeId && employeeId !== filterEmployeeId) return;
+                    
+                    const employee = this.managers[this.currentManager].employees.find(emp => emp.id === employeeId);
+                    if (!employee) return;
+                    
+                    weekData[employeeId].forEach((dayData, dayIndex) => {
+                        const dayName = this.days[dayIndex];
+                        
+                        this.categories.forEach(category => {
+                            const evaluation = dayData[category];
+                            const status = evaluation.checked ? '✓' : '✗';
+                            const statusClass = evaluation.checked ? 'success' : 'issue';
+                            
+                            tableHTML += `
+                                <tr class="${statusClass}">
+                                    <td>${employee.name}</td>
+                                    <td>${dayName}</td>
+                                    <td>${category}</td>
+                                    <td>${status}</td>
+                                    <td>${evaluation.item}</td>
+                                </tr>
+                            `;
+                        });
+                    });
+                });
+                
+                tableHTML += '</tbody></table>';
+                return tableHTML;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            window.evaluationSystem = new EmployeeEvaluationSystem();
+        });
+    </script>
+</body>
+</html>
