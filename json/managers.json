@@ -1,50 +1,64 @@
 {
   "MGR001": {
-    "name": "DAVID MALDONADO",
+    "id": "00186",
+    "name": "DAVID GONZALES MALDONADO",
     "username": "dmaldonado",
-    "password": "1234Segura!",
+    "password": "dmaldonado1",
+    "status": "active",
     "employees": [
-      { "id": "EMP001", "name": "LOURDES RAQUEL AGUIRRE", "username": "laguirre", "password": "passLourdes1!" },
-      { "id": "EMP002", "name": "ERICKA DANIELA MARTINEZ", "username": "edmartinez", "password": "passEricka1!" },
-      { "id": "EMP003", "name": "ASTRID MARIELA COLINDRES ZELAYA", "username": "acolindres", "password": "passAstrid1!" },
-      { "id": "EMP004", "name": "EVELYN DANIELA OSEGUERA AGUILAR", "username": "eoseguera", "password": "passEvelyn1!" },
-      { "id": "EMP005", "name": "ANGEL DAVID ALVARENGA MARTINEZ", "username": "aalvarenga", "password": "passAngel1!" }
+      { "id": "04394", "name": "EVELIN DANIELA OSEGUERA AGUILAR", "username": "eaguilar", "password": "eaguilar1", "status": "active" },
+      { "id": "10070", "name": "ASTRID MARIELA COLINDRES ZELAYA", "username": "acolindres", "password": "acolindres1", "status": "active" },
+      { "id": "10071", "name": "ERICKA DANIELA MARTINEZ", "username": "emartinez", "password": "emartinez1", "status": "active" },
+      { "id": "04866", "name": "JESUS ALCIDES SAGASTUME MARTINEZ", "username": "jsagastume", "password": "jsagastume1", "status": "active" },
+      { "id": "22056", "name": "ANGEL DAVID ALVARENGA MARTINEZ", "username": "amartinez", "password": "amartinez1", "status": "active" },
+      { "id": "21037", "name": "LOURDES RAQUEL AGUIRRE", "username": "laguirre", "password": "laguirre1", "status": "active" },
+      { "id": "13174", "name": "AMSI ABIGAIL URQUIA DURON", "username": "aduron", "password": "aduron1", "status": "active" },
+      { "id": "15164", "name": "DANIEL VLADIMIR HERNANDEZ SALGADO", "username": "dsalgado", "password": "dsalgado1", "status": "active" }
     ]
   },
   "MGR002": {
-    "name": "ANA GARCÍA",
-    "username": "agarcia",
-    "password": "1234Segura!",
+    "id": "00200",
+    "name": "JORGE LUIS RODRIGUEZ MACEDO",
+    "username": "jmacedo",
+    "password": "jmacedo1",
+    "status": "active",
     "employees": [
-      { "id": "EMP006", "name": "JUAN CARLOS MENDEZ", "username": "jcmendez", "password": "passJuan1!" },
-      { "id": "EMP007", "name": "SOFIA ELENA TORRES", "username": "setorres", "password": "passSofia1!" },
-      { "id": "EMP008", "name": "RICARDO ANTONIO FLORES", "username": "raflores", "password": "passRicardo1!" },
-      { "id": "EMP009", "name": "PATRICIA ISABEL MORALES", "username": "pimorales", "password": "passPatricia1!" },
-      { "id": "EMP010", "name": "FERNANDO JOSE HERRERA", "username": "fjherrera", "password": "passFernando1!" }
+      { "id": "20638", "name": "HELEN DANIELA MATUTE ZAMBRANO", "username": "hzambrano", "password": "hzambrano1", "status": "active" },
+      { "id": "15616", "name": "EMELY RACHEL ROMERO CABRERA", "username": "ecabrera", "password": "ecabrera1", "status": "active" },
+      { "id": "21145", "name": "YORLENY PAVETH OLIVA MALDONADO", "username": "ymaldonado", "password": "ymaldonado1", "status": "active" },
+      { "id": "22694", "name": "ISIS AMALETH ARDON MARADIAGA", "username": "imaradiaga", "password": "imaradiaga1", "status": "active" },
+      { "id": "10616", "name": "ROBERTO CARLOS MERAZ CANALES", "username": "rcanales", "password": "rcanales1", "status": "active" },
+      { "id": "12309", "name": "FABIOLA YADIRA CASTILLO MONCADA", "username": "fmoncada", "password": "fmoncada1", "status": "active" },
+      { "id": "02936", "name": "VICTOR ENRIQUE MALDONADO ZELAYA", "username": "vzelaya", "password": "vzelaya1", "status": "active" }
     ]
   },
   "MGR003": {
-    "name": "CARLOS LÓPEZ",
-    "username": "clopez",
-    "password": "1234Segura!",
+    "id": "00142",
+    "name": "FRANCISCO JAVIER MENDEZ MONTENEGRO",
+    "username": "fmontenegro",
+    "password": "fmontenegro1",
+    "status": "active",
     "employees": [
-      { "id": "EMP011", "name": "CLAUDIA PATRICIA RIVERA", "username": "cprivera", "password": "passClaudia1!" },
-      { "id": "EMP012", "name": "MIGUEL ANGEL SANTOS", "username": "masantos", "password": "passMiguel1!" },
-      { "id": "EMP013", "name": "ANDREA LUCIA VARGAS", "username": "alvargas", "password": "passAndrea1!" },
-      { "id": "EMP014", "name": "JOSE MANUEL CASTRO", "username": "jmcastro", "password": "passJose1!" },
-      { "id": "EMP015", "name": "GABRIELA MARIA JIMENEZ", "username": "gmjimenez", "password": "passGabriela1!" }
+      { "id": "20200", "name": "WOLFANG ANDRE SOSA LANZA", "username": "wlanza", "password": "wlanza1", "status": "active" },
+      { "id": "00439", "name": "JONNY OMAR SALINAS ROSALES", "username": "jrosales", "password": "jrosales1", "status": "active" },
+      { "id": "03487", "name": "KENIA ISABEL ZAMBRANO MOLINA", "username": "kmolina", "password": "kmolina1", "status": "active" },
+      { "id": "09404", "name": "DAVID ALEJANDRO SANTOS ORDONEZ", "username": "dordonez", "password": "dordonez1", "status": "active" },
+      { "id": "15245", "name": "MARCELO ALEJANDRO FOLGAR BONILLA", "username": "mbonilla", "password": "mbonilla1", "status": "active" },
+      { "id": "23863", "name": "ANDRE ALEXANDER GARCIA LAINEZ", "username": "alainez", "password": "alainez1", "status": "active" },
+      { "id": "10716", "name": "ALEJANDRO JOSE SALGADO GIRON", "username": "agiron", "password": "agiron1", "status": "active" },
+      { "id": "07986", "name": "GERSON ENOC ZUNIGA CHANG", "username": "gchang", "password": "gchang1", "status": "active" },
+      { "id": "12345", "name": "LUIS EDUARDO ROJAS ESCALA", "username": "lescala", "password": "lescala1", "status": "active" }
     ]
   },
   "MGR004": {
-    "name": "MARÍA RODRÍGUEZ",
-    "username": "mrodriguez",
-    "password": "1234Segura!",
+    "id": "00731",
+    "name": "JORGE ARTURO GOMEZ COELLO",
+    "username": "jcoello",
+    "password": "jcoello1",
+    "status": "active",
     "employees": [
-      { "id": "EMP016", "name": "ROBERTO CARLOS PEÑA", "username": "rcpena", "password": "passRoberto1!" },
-      { "id": "EMP017", "name": "VALERIA ALEJANDRA CRUZ", "username": "vacruz", "password": "passValeria1!" },
-      { "id": "EMP018", "name": "DIEGO FERNANDO RAMOS", "username": "dframos", "password": "passDiego1!" },
-      { "id": "EMP019", "name": "CAROLINA BEATRIZ ORTEGA", "username": "cbortega", "password": "passCarolina1!" },
-      { "id": "EMP020", "name": "ALEJANDRO DAVID SILVA", "username": "adsilva", "password": "passAlejandro1!" }
+      { "id": "14537", "name": "LUIS FRANCISCO MURILLO CARCAMO", "username": "lcarcamo", "password": "lcarcamo1", "status": "active" },
+      { "id": "02150", "name": "CLAUDETTE DESIREE ROLLINGS MARTINEZ", "username": "cmartinez", "password": "cmartinez1", "status": "active" }
     ]
   }
 }
