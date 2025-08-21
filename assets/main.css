@@ -17,7 +17,7 @@ body {
 
 /* Sidebar Styles */
 .sidebar {
-  background-color: #252525;
+  background-color: #0a0a0a;
   color: white;
   width: 270px;
   height: 100vh;
@@ -68,7 +68,7 @@ body {
 }
 
 .sidebar-toggle-btn:hover {
-  background-color: #454545;
+  background-color: #1d1d1d;
 }
 
 .sidebar-toggle-icon {
@@ -167,8 +167,13 @@ body {
 }
 
 .sidebar-link:hover {
-  background-color: #454545;
+  background-color: #1d1d1d;
   color: white;
+}
+
+.sidebar-link.active {
+  background-color: #1d1d1d;
+  color: #ffffff;
 }
 
 .sidebar-link-icon {

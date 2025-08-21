@@ -73,7 +73,7 @@ $managerIdForEmployee = $_SESSION['manager_id_for_employee'];
         this.currentWeekId = null;
         this.managers = {};
         this.evaluationItems = {};
-        this.categories = ['ASISTENCIA', 'PLÁTICAS', 'PRODUCTIVIDAD', 'ACTITUD'];
+        this.categories = ['PUNTUALIDAD', 'PRESENTACION', 'ORDEN', 'COMUNICACION', 'EQUIPO', 'CONDUCTA', 'ACTITUD', 'PRODUCTIVIDAD', 'COLABORACION', 'NORMAS', 'RESPONSABILIDAD', 'ATENCION_AL_CLIENTE'];
         this.dataLoaded = false;
         this.dataLoadPromise = null;
         this.weekIdByKey = {};
@@ -207,7 +207,7 @@ $managerIdForEmployee = $_SESSION['manager_id_for_employee'];
           const tr = document.createElement('tr');
           tr.innerHTML = `<td class="employee-name">${cat}</td>` + days.map((_, idx) => {
             const d = map[idx]?.[cat];
-            const item = d ? d.item : 'Sin datos';
+            const item = d ? d.item : 'PERFECTO';
             const ok = d ? d.checked : true;
             const badge = ok ? '<span style="color:#2e7d32;">✔</span>' : '<span style="color:#dc2626;">✖</span>';
             return `<td>${badge} <small>${item}</small></td>`;

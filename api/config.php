@@ -7,3 +7,6 @@ const SUPABASE_SERVICE_ROLE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJz
 
 // Endpoint base del REST de Supabase
 const SUPABASE_REST_URL = SUPABASE_URL . '/rest/v1';
+
+// Estados de evaluación
+define('EVALUATION_STATUS_PERFECTO', 'Perfecto');

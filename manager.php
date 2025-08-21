@@ -12,6 +12,7 @@ $managerId = $_SESSION['manager_id'];
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evaluaciones - Manager</title>
+  <script src="js/config.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     :root{ --bg:#0B0E14; --surface:#0F1115; --surface-2:#151924; --text:#E7EAF0; --text-2:#A7AEC0; --primary:#2B6CB0; --success:#16A34A; --warning:#F59E0B; --danger:#DC2626; --border:#1C1F26; --shadow:0 6px 20px rgba(0,0,0,.35); --radius:8px; --space:16px; --sidebar-w:280px; }
@@ -163,8 +164,8 @@ $managerId = $_SESSION['manager_id'];
       this.managerPasswords = {};
       this.employeeUsernames = {};
       this.employeePasswords = {};
-      this.categories = ['ASISTENCIA', 'PLÁTICAS', 'PRODUCTIVIDAD', 'ACTITUD'];
-      this.categoryMapping = { 'ASISTENCIA': 'asistencia', 'PLÁTICAS': 'platicas', 'PRODUCTIVIDAD': 'productividad', 'ACTITUD': 'actitud' };
+      this.categories = ['PUNTUALIDAD', 'PRESENTACION', 'ORDEN', 'COMUNICACION', 'EQUIPO', 'CONDUCTA', 'ACTITUD', 'PRODUCTIVIDAD', 'COLABORACION', 'NORMAS', 'RESPONSABILIDAD', 'ATENCION_AL_CLIENTE'];
+      // Mapeo directo ya que las claves son iguales
       this.days = ['LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES'];
       this.dataLoaded = false;
       this.dataLoadPromise = null;
@@ -179,6 +180,13 @@ $managerId = $_SESSION['manager_id'];
         ]);
         this.managers = await managersRes.json();
         this.evaluationItems = await itemsRes.json();
+        
+        // Reemplazar 'Perfecto' por la constante en todas las categorías
+        Object.keys(this.evaluationItems).forEach(category => {
+          if (this.evaluationItems[category] && this.evaluationItems[category][0] === 'PERFECTO') {
+            this.evaluationItems[category][0] = APP_CONFIG.EVALUATION.STATUS.PERFECTO;
+          }
+        });
       })();
       await this.dataLoadPromise;
       this.managerUsernames = {};
@@ -232,8 +240,7 @@ $managerId = $_SESSION['manager_id'];
           this.categories.forEach(category => {
             const isChecked = dayData[category].checked ? 'checked' : '';
             const selectClass = dayData[category].checked ? '' : 'has-issue';
-            const categoryKey = this.categoryMapping[category];
-            row.innerHTML += `<td><div class="checkbox-container"><input type="checkbox" class="evaluation-checkbox" ${isChecked} disabled></div></td><td><select class="item-select ${selectClass}" onchange="evaluationSystem.updateEvaluation('${employee.id}', ${dayIndex}, '${category}', 'item', this.value)">${this.evaluationItems[categoryKey].map(item => `<option value="${item}" ${item === dayData[category].item ? 'selected' : ''}>${item}</option>`).join('')}</select></td>`;
+            row.innerHTML += `<td><div class="checkbox-container"><input type="checkbox" class="evaluation-checkbox" ${isChecked} disabled></div></td><td><select class="item-select ${selectClass}" onchange="evaluationSystem.updateEvaluation('${employee.id}', ${dayIndex}, '${category}', 'item', this.value)">${this.evaluationItems[category].map(item => `<option value="${item}" ${item === dayData[category].item ? 'selected' : ''}>${item}</option>`).join('')}</select></td>`;
           });
         }
         document.getElementById('evaluationTableBody').appendChild(row);
@@ -269,8 +276,7 @@ $managerId = $_SESSION['manager_id'];
         this.categories.forEach(category => {
           const isChecked = dayData[category].checked ? 'checked' : '';
           const selectClass = dayData[category].checked ? '' : 'has-issue';
-          const categoryKey = this.categoryMapping[category];
-          row.innerHTML += `<td><div class="checkbox-container"><input type="checkbox" class="evaluation-checkbox" ${isChecked} disabled></div></td><td><select class="item-select ${selectClass}" onchange="evaluationSystem.updateEvaluation('${employee.id}', ${dayIndex}, '${category}', 'item', this.value)">${this.evaluationItems[categoryKey].map(item => `<option value="${item}" ${item === dayData[category].item ? 'selected' : ''}>${item}</option>`).join('')}</select></td>`;
+          row.innerHTML += `<td><div class="checkbox-container"><input type="checkbox" class="evaluation-checkbox" ${isChecked} disabled></div></td><td><select class="item-select ${selectClass}" onchange="evaluationSystem.updateEvaluation('${employee.id}', ${dayIndex}, '${category}', 'item', this.value)">${this.evaluationItems[category].map(item => `<option value="${item}" ${item === dayData[category].item ? 'selected' : ''}>${item}</option>`).join('')}</select></td>`;
         });
         tbody.appendChild(row);
       });
@@ -280,13 +286,12 @@ $managerId = $_SESSION['manager_id'];
       if (!this.currentWeek || !this.evaluationData[this.currentManager] || !this.evaluationData[this.currentManager][this.currentWeek]) return;
       const weekData = this.evaluationData[this.currentManager][this.currentWeek];
       if (!weekData[employeeId] || !weekData[employeeId][dayIndex]) return;
-      const categoryKey = this.categoryMapping[category];
-      if (!categoryKey || !this.evaluationItems[categoryKey]) return;
+      if (!this.evaluationItems[category]) return;
       const prevItem = weekData[employeeId][dayIndex][category]['item'];
       const prevChecked = weekData[employeeId][dayIndex][category]['checked'];
       if (field === 'item') {
         weekData[employeeId][dayIndex][category]['item'] = value;
-        weekData[employeeId][dayIndex][category]['checked'] = (value === 'Perfecto');
+        weekData[employeeId][dayIndex][category]['checked'] = (value === APP_CONFIG.EVALUATION.STATUS.PERFECTO);
       }
       try {
         const resp = await fetch('api/index.php?action=evaluation_update', {
@@ -337,7 +342,7 @@ $managerId = $_SESSION['manager_id'];
             if (isPerfect) perfectEmployees++;
           }
         });
-        statsGrid.innerHTML += `<div class="stat-item"><div class="stat-number">${perfectEmployees}/${totalEmployees}</div><div>Perfectos ${dayName}</div></div>`;
+        statsGrid.innerHTML += `<div class="stat-item"><div class="stat-number">${perfectEmployees}/${totalEmployees}</div><div>${APP_CONFIG.EVALUATION.STATUS.PERFECTO}s ${dayName}</div></div>`;
       }
     }
 
@@ -415,7 +420,7 @@ $managerId = $_SESSION['manager_id'];
                 day_index: i,
                 category: category,
                 checked: true,
-                item: 'Perfecto'
+                item: APP_CONFIG.EVALUATION.STATUS.PERFECTO
               });
             });
           }
@@ -474,7 +479,7 @@ $managerId = $_SESSION['manager_id'];
           for (let i = 0; i < 5; i++) {
             const dayObj = {};
             this.categories.forEach(cat => {
-              dayObj[cat] = { checked: true, item: 'Perfecto' };
+              dayObj[cat] = { checked: true, item: APP_CONFIG.EVALUATION.STATUS.PERFECTO };
             });
             this.evaluationData[this.currentManager][weekKey][employee.id][i] = dayObj;
           }
@@ -501,7 +506,7 @@ $managerId = $_SESSION['manager_id'];
             for (let i = 0; i < 5; i++) {
               const dayObj = {};
               this.categories.forEach(cat => {
-                dayObj[cat] = { checked: true, item: 'Perfecto' };
+                dayObj[cat] = { checked: true, item: APP_CONFIG.EVALUATION.STATUS.PERFECTO };
               });
               this.evaluationData[this.currentManager][weekKey][employee.id][i] = dayObj;
             }
@@ -553,7 +558,7 @@ $managerId = $_SESSION['manager_id'];
           mgrEmps.forEach(emp => {
             for (let i = 0; i < 5; i++) {
               this.categories.forEach(category => {
-                this.evaluationData[this.currentManager][weekKey][emp.id][i][category] = { checked: true, item: 'Perfecto' };
+                this.evaluationData[this.currentManager][weekKey][emp.id][i][category] = { checked: true, item: APP_CONFIG.EVALUATION.STATUS.PERFECTO };
               });
             }
           });
@@ -728,7 +733,7 @@ $managerId = $_SESSION['manager_id'];
             dataset[wk][emp.id] = [];
             for (let i = 0; i < 5; i++) {
               const dayObj = {};
-              evaluationSystem.categories.forEach(cat => { dayObj[cat] = { checked: true, item: 'Perfecto' }; });
+              evaluationSystem.categories.forEach(cat => { dayObj[cat] = { checked: true, item: APP_CONFIG.EVALUATION.STATUS.PERFECTO }; });
               dataset[wk][emp.id][i] = dayObj;
             }
           });
@@ -759,7 +764,7 @@ $managerId = $_SESSION['manager_id'];
             dataset[idToKey[w.id]][emp.id] = [];
             for (let i = 0; i < 5; i++) {
               const dayObj = {};
-              evaluationSystem.categories.forEach(cat => { dayObj[cat] = { checked: true, item: 'Perfecto' }; });
+              evaluationSystem.categories.forEach(cat => { dayObj[cat] = { checked: true, item: APP_CONFIG.EVALUATION.STATUS.PERFECTO }; });
               dataset[idToKey[w.id]][emp.id][i] = dayObj;
             }
           });
