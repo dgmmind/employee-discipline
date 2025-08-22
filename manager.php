@@ -13,51 +13,34 @@ $managerId = $_SESSION['manager_id'];
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evaluaciones - Manager</title>
   <script src="js/config.js"></script>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    :root{ --bg:#0B0E14; --surface:#0F1115; --surface-2:#151924; --text:#E7EAF0; --text-2:#A7AEC0; --primary:#2B6CB0; --success:#16A34A; --warning:#F59E0B; --danger:#DC2626; --border:#1C1F26; --shadow:0 6px 20px rgba(0,0,0,.35); --radius:8px; --space:16px; --sidebar-w:280px; }
-    body { font-family: Arial, sans-serif; background-color:#f5f5f5; padding:20px; }
-    .container { max-width:1400px; margin:0 auto; background:#fff; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); overflow:hidden; }
-    .btn { background-color: var(--primary); color: var(--text); padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; margin: 5px; }
-    .btn-secondary { background-color: #2196F3; }
-    .topbar{ position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:12px; padding:10px 16px; background:#ffffff; border-bottom:1px solid #ddd; }
-    .topbar .brand{ display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; }
-    .topbar .nav-actions{ display:flex; align-items:center; gap:8px; margin-left:8px; }
-    .topbar .nav-btn{ background:#f5f7fb; border:1px solid #e2e8f0; color:#334155; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; }
-    .topbar .nav-btn:hover{ background:#e2e8f0; color:#111827; }
-    .topbar .search-area{ margin-left:auto; display:flex; align-items:center; gap:10px; }
-    .topbar #globalSearch{ padding:8px 10px; border:1px solid #e5e7eb; border-radius:8px; min-width:220px; }
-    .topbar .manager-name{ color:#475569; font-weight:700; }
-    .week-header{ background:#A5D6A7; color:#2E7D32; text-align:center; padding:10px; font-weight:bold; }
-    .evaluation-table{ width:100%; border-collapse:collapse; font-size:12px; }
-    .evaluation-table th{ background:#E8F5E8; padding:8px 4px; text-align:center; font-weight:bold; border:1px solid #ddd; font-size:11px; }
-    .evaluation-table td{ padding:6px 4px; border:1px solid #ddd; text-align:center; vertical-align:middle; }
-    .employee-name{ text-align:left !important; font-weight:bold; background:#f9f9f9; padding-left:10px !important; min-width:200px; font-size:11px; }
-    .category-header{ background:#C8E6C9; font-weight:bold; color:#2E7D32; }
-    .day-header{ background:#FFE082; font-weight:bold; color:#F57C00; }
-    .checkbox-container{ display:flex; align-items:center; justify-content:center; gap:2px; }
-    .evaluation-checkbox{ width:16px; height:16px; cursor:pointer; }
-    .evaluation-checkbox:disabled { opacity:.6; cursor:not-allowed; }
-    .item-select{ padding:2px; border:1px solid #ddd; border-radius:3px; font-size:10px; min-width:90px; max-width:100px; }
-    .item-select.has-issue{ background:#ffebee; border-color:#f44336; }
-    .week-management{ padding:20px; background:#f8f9fa; border-bottom:1px solid #ddd; }
-    .week-controls{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; }
-    .day-navigation{ padding:15px 20px; background:#e8f5e8; border-bottom:1px solid #ddd; display:none; }
-    .day-tabs{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
-    .day-tab{ padding:8px 16px; background:#fff; border:2px solid #4CAF50; border-radius:5px; cursor:pointer; font-weight:bold; transition:all .3s; }
-    .day-tab.active{ background:#4CAF50; color:#fff; }
-    .reports-module{ padding:20px; background:#f0f8ff; border-bottom:1px solid #ddd; display:none; }
-    .reports-controls{ display:flex; gap:15px; align-items:center; flex-wrap:wrap; }
-    .stats{ margin-top:20px; padding:15px; background:#e3f2fd; border-radius:4px; }
-    .stats-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:10px; margin-top:10px; }
-    .stat-item{ background:#fff; padding:8px; border-radius:4px; text-align:center; }
-    .stat-number{ font-size:20px; font-weight:bold; color:#1976d2; }
-    .hidden{ display:none; }
-  </style>
+  <link rel="stylesheet" href="assets/manager.css">
 </head>
 <body>
-  <div class="container">
-    <div id="mainScreen">
+
+
+  <?php include 'includes/header.php'; ?>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <?php include 'includes/sidebar.php'; ?>
+
+        <!-- Mobile Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="main-content-inner">
+                <header class="main-header">
+                    <button class="main-menu-btn" id="mobileMenuBtn">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="main-title">Dashboard</h1>
+                </header>
+
+<div class="main-body">
+    <div class="content-card">
+      <div id="mainScreen">
       <div class="topbar">
         <div class="brand"><i data-feather="grid"></i><span>Evaluaciones</span></div>
         <div class="nav-actions">
@@ -66,8 +49,7 @@ $managerId = $_SESSION['manager_id'];
           <button class="nav-btn" id="btnDailyView" onclick="showDayView()">Vista por día</button>
           <button class="nav-btn" id="btnReports" onclick="showReports()">Reportes</button>
         </div>
-        <div class="search-area">
-          <input id="globalSearch" type="search" placeholder="Buscar empleado..." />
+        <div class="nav-actions">
           <span id="managerHeader" class="manager-name"></span>
           <button class="nav-btn" id="btnLogout" onclick="logoutApp()">Cerrar sesión</button>
         </div>
@@ -126,7 +108,7 @@ $managerId = $_SESSION['manager_id'];
         <div id="reportsResults" style="margin-top:12px"></div>
       </div>
 
-      <div id="evaluationSection" class="hidden">
+      <div id="evaluationSection" class="hidden tabEvaluation">
         <div id="weekHeader" class="week-header"></div>
         <table class="evaluation-table" id="weeklyTable">
           <thead id="weeklyTableHeader"></thead>
@@ -137,10 +119,46 @@ $managerId = $_SESSION['manager_id'];
         <table class="evaluation-table single-day-table" id="wednesdayTable"><thead id="wednesdayTableHeader"></thead><tbody id="wednesdayTableBody"></tbody></table>
         <table class="evaluation-table single-day-table" id="thursdayTable"><thead id="thursdayTableHeader"></thead><tbody id="thursdayTableBody"></tbody></table>
         <table class="evaluation-table single-day-table" id="fridayTable"><thead id="fridayTableHeader"></thead><tbody id="fridayTableBody"></tbody></table>
-        <div class="stats"><h3>Estadísticas de la Semana</h3><div class="stats-grid" id="statsGrid"></div></div>
+    
       </div>
     </div>
-  </div>
+    <div class="content-card">
+
+        <h3>Estadísticas de la Semana</h3>
+        <div class="stats-grid" id="statsGrid"></div>
+      
+    </div>
+</div>
+
+    </main>
+    </div>
+
+    
+<?php include 'includes/footer.php'; ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   <script src="https://unpkg.com/feather-icons"></script>
   <script>
@@ -218,12 +236,13 @@ $managerId = $_SESSION['manager_id'];
       let secondRow = '<tr>';
       this.days.forEach(() => {
         this.categories.forEach(cat => {
-          secondRow += '<th class="category-header">✓</th>';
+          secondRow += '<th class="category-header"><i data-feather="check"></i></th>';
           secondRow += `<th class="category-header">${cat}</th>`;
         });
       });
       secondRow += '</tr>';
       thead.innerHTML = firstRow + secondRow;
+      feather.replace(); // Inicializar los íconos de Feather
     }
 
     renderWeeklyEvaluationTable() {
@@ -582,8 +601,6 @@ $managerId = $_SESSION['manager_id'];
   }
 
   let evaluationSystem;
-  let currentView = 'week';
-  let currentDay = 'LUNES';
 
   function createNewWeek() { evaluationSystem.createNewWeek(); }
   function loadWeek() { evaluationSystem.loadWeek(); }

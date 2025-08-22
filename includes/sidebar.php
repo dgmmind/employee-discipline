@@ -15,12 +15,18 @@
           <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%234f46e5'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-family='Arial' font-size='16' font-weight='bold'%3EC%3C/text%3E%3C/svg%3E" alt="User avatar" class="sidebar-avatar-img" />
         </div>
         <div class="sidebar-profile-info" id="profileInfo">
-          <p class="sidebar-username">Codepen</p>
+          <p class="sidebar-username">VLACKSTER</p>
           <p class="sidebar-user-role">Coder</p>
         </div>
       </div>
     </header>
-
+      <?php 
+        if(isset($_SESSION['manager_id'])) {
+            echo "<p>Manager</p>";
+        } else {
+            echo "<p>Employee</p>";
+        }
+      ?>
     <!-- Navigation Lists -->
     <div class="sidebar-content">
       <!-- Primary Navigation -->
@@ -29,6 +35,7 @@
         <ul class="sidebar-list">
           <li>
             <div class="sidebar-link-wrapper">
+
               <a href="#" class="sidebar-link">
                 <svg class="sidebar-link-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>

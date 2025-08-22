@@ -13,48 +13,9 @@ $managerIdForEmployee = $_SESSION['manager_id_for_employee'];
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Evaluaciones - Empleado</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    :root{ --primary:#2B6CB0; }
-    body { font-family: Arial, sans-serif; background:#f5f5f5; padding:20px; }
-    .container { max-width:1100px; margin:0 auto; background:#fff; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); overflow:hidden; }
-    .topbar{ position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:12px; padding:10px 16px; background:#ffffff; border-bottom:1px solid #ddd; }
-    .topbar .brand{ display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; }
-    .topbar .nav-actions{ display:flex; align-items:center; gap:8px; margin-left:8px; }
-    .topbar .nav-btn{ background:#f5f7fb; border:1px solid #e2e8f0; color:#334155; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; }
-    .topbar .nav-btn:hover{ background:#e2e8f0; color:#111827; }
-    .topbar .search-area{ margin-left:auto; display:flex; align-items:center; gap:10px; }
-    .topbar .manager-name{ color:#475569; font-weight:700; }
-    .week-header{ background:#A5D6A7; color:#2E7D32; text-align:center; padding:10px; font-weight:bold; }
-    .evaluation-table{ width:100%; border-collapse:collapse; font-size:12px; }
-    .evaluation-table th{ background:#E8F5E8; padding:8px 4px; text-align:center; font-weight:bold; border:1px solid #ddd; font-size:11px; }
-    .evaluation-table td{ padding:6px 4px; border:1px solid #ddd; text-align:center; vertical-align:middle; }
-    .employee-name{ text-align:left !important; font-weight:bold; background:#f9f9f9; padding-left:10px !important; min-width:200px; font-size:11px; }
-    .hidden{ display:none; }
-    .btn { background-color: var(--primary); color: #fff; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-  </style>
+  <link rel="stylesheet" href="assets/employee.css">
 </head>
 <body>
-  <div class="container">
-    <div class="topbar">
-      <div class="brand"><i data-feather="user"></i><span>Mis evaluaciones</span></div>
-      <div class="search-area">
-        <span id="employeeHeader" class="manager-name"></span>
-        <button class="nav-btn" onclick="logoutApp()">Cerrar sesión</button>
-      </div>
-    </div>
-
-    <div id="myEvaluationsSection" style="padding:20px;">
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
-        <div id="myWeekHeader" class="week-header" style="margin:0;">Semana:</div>
-        <select id="myWeekSelect" onchange="onMyWeekChange()" style="padding:6px 8px; border-radius:6px; border:1px solid #e5e7eb;"></select>
-      </div>
-      <table class="evaluation-table" id="myEvaluationsTable">
-        <thead id="myEvaluationsHeader"></thead>
-        <tbody id="myEvaluationsBody"></tbody>
-      </table>
-    </div>
-  </div>
 
   <script>
     window.PHP_SESSION = {
@@ -257,5 +218,70 @@ $managerIdForEmployee = $_SESSION['manager_id_for_employee'];
 
     document.addEventListener('DOMContentLoaded', initEmployee);
   </script>
-</body>
-</html>
+
+<?php include 'includes/header.php'; ?>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <?php include 'includes/sidebar.php'; ?>
+
+        <!-- Mobile Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="main-content-inner">
+                <header class="main-header">
+                    <button class="main-menu-btn" id="mobileMenuBtn">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="main-title">Dashboard</h1>
+                </header>
+  <!-- eliminar container -->
+
+  <div class="main-body">
+            <div class="content-card">
+                        
+    <div class="topbar">
+      <div class="brand"><i data-feather="user"></i><span>Mis evaluaciones</span></div>
+      <div class="search-area">
+        <span id="employeeHeader" class="manager-name"></span>
+        <button class="nav-btn" onclick="logoutApp()">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div id="myEvaluationsSection">
+      <div>
+        <div id="myWeekHeader" class="week-header">Semana:</div>
+        <select id="myWeekSelect" onchange="onMyWeekChange()"></select>
+      </div>
+      <table class="evaluation-table" id="myEvaluationsTable">
+        <thead id="myEvaluationsHeader"></thead>
+        <tbody id="myEvaluationsBody"></tbody>
+      </table>
+    </div>
+  </div>
+            </div>
+
+            <div class="content-grid">
+                        <div class="content-card">
+                            <h3 class="content-subtitle">Card 1</h3>
+                            <p class="content-text">Sample content for demonstration.</p>
+                        </div>
+                        <div class="content-card">
+                            <h3 class="content-subtitle">Card 2</h3>
+                            <p class="content-text">More sample content here.</p>
+                        </div>
+                        <div class="content-card">
+                            <h3 class="content-subtitle">Card 3</h3>
+                            <p class="content-text">Additional content example.</p>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    
+<?php include 'includes/footer.php'; ?>
